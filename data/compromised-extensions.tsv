@@ -1,0 +1,130 @@
+# GlassWorm-compromised VS Code / OpenVSX extensions.
+# Source: afine-com/glassworm-hunter data/ioc.json (Koi Security, Socket.dev,
+#         StepSecurity, Aikido Security), snapshot 2026-08-17.
+# Format: extension-id<TAB>wave<TAB>source
+# Refresh: https://github.com/afine-com/glassworm-hunter -> data/ioc.json
+
+cline-ai-main.cline-ai-agent	wave-1	Koi Security
+codeinklingon.git-worktree-menu	wave-1	Koi Security
+codejoy.codejoy-vscode-extension	wave-1	Koi Security
+ellacrity.recoil	wave-1	Koi Security
+ginfuru.better-nunjucks	wave-1	Koi Security
+grrrck.positron-plus-1-e	wave-1	Koi Security
+jeronimoekerdt.color-picker-universal	wave-1	Koi Security
+jscearcy.rust-doc-viewer	wave-1	Koi Security
+kleinesfilmroellchen.serenity-dsl-syntaxhighlight	wave-1	Koi Security
+l-igh-t.vscode-theme-seti-folder	wave-1	Koi Security
+sirilmp.dark-theme-sm	wave-1	Koi Security
+sissel.shopify-liquid	wave-1	Koi Security
+srcery-colors.srcery-colors	wave-1	Koi Security
+tretinv3.forts-api-extention	wave-1	Koi Security
+adhamu.history-in-sublime-merge	wave-2	Koi Security
+ai-driven-dev.ai-driven-dev	wave-2	Koi Security
+yasuyuky.transient-emacs	wave-2	Koi Security
+cudra-production.vsce-prettier-pro	wave-4	Koi Security
+puccin-development.full-access-catppuccin-pro-extension	wave-4	Koi Security
+studio-velte-distributor.pro-svelte-extension	wave-4	Koi Security
+96-studio.json-formatter	wave-5	Socket.dev
+aadarkcode.one-dark-material	wave-5	Koi Security
+aligntool.extension-align-professional-tool	wave-5	Koi Security
+angular-studio.ng-angular-extension	wave-5	Koi Security
+awesome-codebase.codebase-dart-pro	wave-5	Koi Security
+awesome-codespace.jinja-language-support	wave-5	Socket.dev
+awesomeco.wonder-for-vscode-icons	wave-5	Koi Security
+awwwadem.language-professional-tools	wave-5	Socket.dev
+baksmink.vscode-quokka-extension	wave-5	Socket.dev
+bansheejust22.retro-vhs-theme	wave-5	Socket.dev
+bhbpbarn.vsce-python-indent-extension	wave-5	Koi Security
+blockstoks.easily-gitignore-manage	wave-5	Koi Security
+brategmaqendaalar-studio.pro-prettyxml-formatter	wave-5	Koi Security
+calow-dex.prisma-database-schema-tools	wave-5	Socket.dev
+cod-vok.arko-dev-devsecops	wave-5	Socket.dev
+codbro-dxp.explorer-xml-xquery	wave-5	Socket.dev
+codbroks.compile-runnner-extension	wave-5	Koi Security
+codevunm-tm.cluster-kuberntes-manager	wave-5	Socket.dev
+codevunmis.csv-sql-tsv-rainbow	wave-5	Koi Security
+codwayexten.code-way-extension	wave-5	Koi Security
+cosmic-themes.sql-formatter	wave-5	Koi Security
+craz2team.vscode-todo-extension	wave-5	Socket.dev
+croct-studio.antigravity-model-usage-dashboard	wave-5	Socket.dev
+crotoapp.vscode-xml-extension	wave-5	Koi Security
+daeumer-web.align-format-tool	wave-5	Socket.dev
+daeumer-web.es-linter-for-vs-code	wave-5	Koi Security
+dark-code-studio.flutter-extension	wave-5	Koi Security
+densy-little-studio.wonder-for-vscode-icons	wave-5	Koi Security
+dep-labs-studio.dep-proffesinal-extension	wave-5	Koi Security
+dev-studio-sense.php-comp-tools-vscode	wave-5	Koi Security
+dev-tm.code-python-indent-helper	wave-5	Socket.dev
+devmidu-studio.svg-better-extension	wave-5	Koi Security
+dopbop-studio.vscode-tailwindcss-extension-toolkit	wave-5	Koi Security
+errlenscre.error-lens-finder-ex	wave-5	Koi Security
+exss-studio.yaml-professional-extension	wave-5	Koi Security
+federicanc.dotenv-syntax-highlighting	wave-5	Koi Security
+flape-osx.align-code-format-tool	wave-5	Socket.dev
+floktokbok.autoimport-smart-tool	wave-5	Socket.dev
+flutxvs.vscode-kuberntes-extension	wave-5	Koi Security
+gorth-tm.your-project-manager-organizer	wave-5	Socket.dev
+gvotcha.claude-code-extension	wave-5	Koi Security
+gvotcha.claude-code-extensions	wave-5	Koi Security
+intellipro.extension-json-intelligence	wave-5	Koi Security
+kharizma.vscode-extension-wakatime	wave-5	Koi Security
+ko-zu-gun-studio.synchronization-settings-vscode	wave-5	Koi Security
+kwitch-studio.auto-run-command-extension	wave-5	Koi Security
+lauracode.wrap-selected-code	wave-5	Socket.dev
+lavender-studio.theme-lavender-dreams	wave-5	Koi Security
+littensy-studio.magical-icons	wave-5	Koi Security
+lyu-wen-studio-web-han.better-formatter-vscode	wave-5	Koi Security
+marcus-tm.ruby-intelligence-toolkit	wave-5	Socket.dev
+markvalid.vscode-mdvalidator-extension	wave-5	Koi Security
+mecreation-studio.pyrefly-pro-extension	wave-5	Koi Security
+msw-tm.component-vetur-toolkit	wave-5	Socket.dev
+mswincx.antigravity-cockpit	wave-5	Koi Security
+mswincx.antigravity-cockpit-extension	wave-5	Koi Security
+namop-dex.claude-code-assistant	wave-5	Socket.dev
+namopins.prettier-pro-vscode-extension	wave-5	Koi Security
+oigotm.my-command-palette-extension	wave-5	Koi Security
+oorzc.i18n-tools-plus	wave-5	Socket.dev
+oorzc.mind-map	wave-5	Socket.dev
+oorzc.scss-to-css-compile	wave-5	Socket.dev
+oorzc.ssh-tools	wave-5	Socket.dev
+otobo-vs.csv-query-tsv-rainbow	wave-5	Socket.dev
+otoboss.autoimport-extension	wave-5	Koi Security
+ovixcode.vscode-better-comments	wave-5	Koi Security
+oxigener-tmp.sql-turbo-manager	wave-5	Socket.dev
+pessa07tm.my-js-ts-auto-commands	wave-5	Koi Security
+potstok.dotnet-runtime-extension	wave-5	Koi Security
+pretty-studio-advisor.prettyxml-formatter	wave-5	Koi Security
+prismapp.prisma-vs-code-extension	wave-5	Koi Security
+projmanager.your-project-manager-extension	wave-5	Koi Security
+pubruncode.ccoderunner	wave-5	Koi Security
+pyflowpyr.py-flowpyright-extension	wave-5	Koi Security
+pyscopexte.pyscope-extension	wave-5	Koi Security
+quartz.quartz-markdown-editor	wave-5	Koi Security
+quickrunn.auto-run-command-quick	wave-5	Socket.dev
+redcapcollective.vscode-quarkus-elite-suite	wave-5	Koi Security
+rubyideext.ruby-ide-extension	wave-5	Koi Security
+runnerpost.runner-your-code	wave-5	Koi Security
+shinypy.shiny-extension-for-vscode	wave-5	Koi Security
+sol-studio.solidity-extension	wave-5	Koi Security
+spacetoow.vsc-python-indent	wave-5	Socket.dev
+specstudio.code-wakatime-activity-tracker	wave-5	Socket.dev
+ssgwysc.volar-vscode	wave-5	Koi Security
+studio-jjalaire-team.professional-quarto-extension	wave-5	Koi Security
+sun-shine-studio.shiny-extension-for-vscode	wave-5	Koi Security
+sweaty-tstudio.quarto-report-studio	wave-5	Socket.dev
+sxatvo-tm.compile-runnner-build	wave-5	Socket.dev
+sxatvo.jinja-extension	wave-5	Koi Security
+tamokill12.foundry-pdf-extension	wave-5	Koi Security
+thing-mn.your-flow-extension-for-icons	wave-5	Koi Security
+tima-web-wang.shell-check-utils	wave-5	Koi Security
+tokcodes.import-cost-extension	wave-5	Koi Security
+tool-studio.prettier-pro-code-format	wave-5	Socket.dev
+toowespace.worksets-extension	wave-5	Koi Security
+treedotree.tree-do-todoextension	wave-5	Koi Security
+tucyzirille-studio.angular-pro-tools-extension	wave-5	Koi Security
+turbobase.sql-turbo-tool	wave-5	Koi Security
+twilkbilk.color-highlight-css	wave-5	Koi Security
+vce-brendan-studio-eich.js-debuger-vscode	wave-5	Koi Security
+yamal-dext.wonder-workspace-icons	wave-5	Socket.dev
+yamaprolas.revature-labs-extension	wave-5	Koi Security
+myml.vscode-markdown-plantuml-preview	incident-local	this incident (planted via .vscode/extensions.json)
