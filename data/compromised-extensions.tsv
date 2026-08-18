@@ -1,8 +1,21 @@
 # GlassWorm-compromised VS Code / OpenVSX extensions.
-# Source: afine-com/glassworm-hunter data/ioc.json (Koi Security, Socket.dev,
-#         StepSecurity, Aikido Security), snapshot 2026-08-17.
 # Format: extension-id<TAB>wave<TAB>source
-# Refresh: https://github.com/afine-com/glassworm-hunter -> data/ioc.json
+#
+# Updated 2026-08-18 by a 5-source web sweep. Every added id was checked
+# against the vendor page it came from: 203 of 205 appear verbatim in the
+# fetched HTML. Sources: Koi Security (waves 1-5 incl. 'goes native' wave 3),
+# Socket.dev (73-sleeper-extensions, transitive campaign, sleeper activation),
+# Manifold Security (evil-twin), Checkmarx, Truesec, BleepingComputer,
+# TheHackerNews, StepSecurity, Aikido, JFrog.
+#
+# NOTE: afine-com/glassworm-hunter's ioc.json (the previous basis for this
+# file) was last updated 2026-04-05 and contains NO wave-3 entries at all.
+# Do not treat it as current.
+#
+# HELD BACK - reported by one source but not found on any page we fetched.
+# Verify before acting on these:
+#   myexttool.my-command-palette-extension   (Checkmarx Zero (main sample table))
+#   silvia68.console-log-generator   (Checkmarx Zero)
 
 cline-ai-main.cline-ai-agent	wave-1	Koi Security
 codeinklingon.git-worktree-menu	wave-1	Koi Security
@@ -128,3 +141,208 @@ vce-brendan-studio-eich.js-debuger-vscode	wave-5	Koi Security
 yamal-dext.wonder-workspace-icons	wave-5	Socket.dev
 yamaprolas.revature-labs-extension	wave-5	Koi Security
 myml.vscode-markdown-plantuml-preview	incident-local	this incident (planted via .vscode/extensions.json)
+365businessdevelopment.bdev-al-xml-doc	evil-twin	Manifold Security
+academiadosdevs.javafx	evil-twin	Manifold Security
+alduncanson.react-hooks-snippets	evil-twin	Manifold Security
+alex-chen.gitee-code-settings-sync	evil-twin	Manifold Security
+amd.gaia-vscode	evil-twin	Manifold Security
+andenetalexander.vim-cheatsheet	evil-twin	Manifold Security
+andreyvolosovich.monokai-st3	evil-twin	Manifold Security
+angelo-breuer.license-header-manager	evil-twin	Manifold Security
+archchainturn.twinny-ai-assist	sleeper-73	Socket.dev
+artsy.artsy-studio-extension-pack	evil-twin	Manifold Security
+ashhaddevlab.customtkinter-snippets	evil-twin	Manifold Security
+azureadb2ctools.aadb2c	evil-twin	Manifold Security
+azurepolicy.azurepolicyextension	evil-twin	Manifold Security
+bartmanabyss.amiga-debug	evil-twin	Manifold Security
+bdaeumer.vscode-eslint	evil-twin	Manifold Security
+bdznh.c-cpp-compile-run-windows	evil-twin	Manifold Security
+bersenev.mc-super-pilot	sleeper-73	Socket.dev
+better-ts-errors.better-ts-errors	evil-twin	Manifold Security
+boulderzitunnel.vscode-buddies	sleeper-73	Socket.dev
+bphpburn.icons-vscode	unclassified	BleepingComputer
+bphpburnsus.iconesvscode	unclassified	BleepingComputer
+bradymholt.pgformatter	evil-twin	Manifold Security
+breluven.html-smart-suite	sleeper-73	Socket.dev
+brenaven.cursor-rich-helper	sleeper-73	Socket.dev
+bretdoyle.javascript-extensions-pack---js-essentials	evil-twin	Manifold Security
+brixmundo.eca-easy-tool	sleeper-73	Socket.dev
+brixovik.es7-quick-hub	sleeper-73	Socket.dev
+buryagin.openapi-easy-studio	sleeper-73	Socket.dev
+carveltstone.chatbuddy-auto-suite	sleeper-73	Socket.dev
+casualjim.gotemplate	evil-twin	Manifold Security
+chavyleung.vscode-pnpm-verlens	evil-twin	Manifold Security
+chris-hock.pioasm	evil-twin	Manifold Security
+clangdcode.clangd-vsce	unclassified	BleepingComputer
+clangdcode.clangd-vscode	wave-3	Koi Security
+closedtierenchant.vscode-awesome-icons	sleeper-73	Socket.dev
+codevsce.codelddb-vscode	unclassified	BleepingComputer
+configcat.configcat-feature-flags	evil-twin	Manifold Security
+countrepresent49.code-image-preview	sleeper-73	Socket.dev
+csvmech.csv-sql-tsv-rainbow	wave-3	Koi Security
+csvmech.csvrainbow	unclassified	BleepingComputer
+cubedivervolt.html-code-validate	sleeper-73	Socket.dev
+cweijamysq.sync-settings-vscode	unclassified	BleepingComputer
+dalsoven.intellij-live-pilot	sleeper-73	Socket.dev
+dalsovik.dbclient-quick-suite	sleeper-73	Socket.dev
+dart-vsc.code-dart	wave-3	Koi Security
+davidpallinder.rails-test-runner	evil-twin	Manifold Security
+doi.fileheadercomment	evil-twin	Manifold Security
+draconzal.phpstan-easy-hub	sleeper-73	Socket.dev
+dranaven.flask-live-craft	sleeper-73	Socket.dev
+drewbourne.vscode-remark-lint	evil-twin	Manifold Security
+drobnyak.angular-auto-helper	sleeper-73	Socket.dev
+drovenko.data-live-suite	sleeper-73	Socket.dev
+eamodas.shiny-vscode	wave-3	Koi Security
+emotionkyoseparate.turkish-language-pack	sleeper-73	Socket.dev
+epichipporedeem.prettier-eslint-formatter	sleeper-73	Socket.dev
+exargd.vsblack	wave-6	Socket.dev
+faldenko.explorer-auto-hub	sleeper-73	Socket.dev
+floktokbok.autoimport	wave-2026	Aikido
+flutcode.flutter-extension	unclassified	BleepingComputer
+flutterando.flutter-mobx	evil-twin	Manifold Security
+forkelbat.supersigil-rich-hub	sleeper-73	Socket.dev
+frelovin.gitpod-deep-helper	sleeper-73	Socket.dev
+fyltroven.gitchat-fast-tool	sleeper-73	Socket.dev
+galushko.vsclassic-auto-pilot	sleeper-73	Socket.dev
+garaemon.vscode-emacs-tab	evil-twin	Manifold Security
+gastholve.shell-pro-kit	sleeper-73	Socket.dev
+glavin001.unibeautify-vscode	evil-twin	Manifold Security
+gobystrokreactjs.gobystrok	evil-twin	Manifold Security
+goltikov.auto-rich-forge	sleeper-73	Socket.dev
+grisaven.markdown-live-kit	sleeper-73	Socket.dev
+groksrc.ruby	evil-twin	Manifold Security
+gronarin.auto-super-kit	sleeper-73	Socket.dev
+grozdarov.jinjahtml-easy-studio	sleeper-73	Socket.dev
+gusarev.mermaid-super-studio	sleeper-73	Socket.dev
+haelthorn.fractal-fast-studio	sleeper-73	Socket.dev
+helixquar.asciidecorator	evil-twin	Manifold Security
+hyperledgercomposer.composer-support-client	evil-twin	Manifold Security
+iconkief.icon-theme-material	wave-3	Koi Security
+iconkieftwo.icon-theme-materiall	unclassified	BleepingComputer
+insigne.powershell	evil-twin	Manifold Security
+iotaledger.iota-move	evil-twin	Manifold Security
+jakeboone02.cypher-query-language	evil-twin	Manifold Security
+jcamp.dotnet-test-provider-view	evil-twin	Manifold Security
+jeremy38100.init-node-script	evil-twin	Manifold Security
+jt.jakt	evil-twin	Manifold Security
+kaellarkin.hugo-shortcode-syntax	evil-twin	Manifold Security
+karnenko.cursorless-pro-pilot	sleeper-73	Socket.dev
+karnikov.better-rich-studio	sleeper-73	Socket.dev
+keltarin.android-deep-hub	sleeper-73	Socket.dev
+keyacrosslaud.auto-loop-for-antigravity	sleeper-73	Socket.dev
+klustfix.kluster-code-verify	unclassified	BleepingComputer
+krosarin.npm-fast-studio	sleeper-73	Socket.dev
+krosaven.dot-live-forge	sleeper-73	Socket.dev
+krosovik.laravel-quick-pilot	sleeper-73	Socket.dev
+krundoven.ironplc-fast-hub	sleeper-73	Socket.dev
+kuldaran.search-smart-forge	sleeper-73	Socket.dev
+lairinspectortrek70.todo-highlighter	sleeper-73	Socket.dev
+lavrentev.project-live-studio	sleeper-73	Socket.dev
+lego-education.ev3-micropython	evil-twin	Manifold Security
+lesnitsky.tikbook-easy-lens	sleeper-73	Socket.dev
+levertion.mcjson	evil-twin	Manifold Security
+lyywemhan.code-formatter-and-minifier-vscode	wave-3	Koi Security
+madhavd1.javadoc-tools	evil-twin	Manifold Security
+magne-sjaastad.opm-flow-editor-support	evil-twin	Manifold Security
+maptz.regionfolder	evil-twin	Manifold Security
+marabenov.graphql-super-craft	sleeper-73	Socket.dev
+marinhobrandao.angular2tests	evil-twin	Manifold Security
+marketplace.visualstudio	evil-twin	Manifold Security
+mashulin.vue-easy-studio	sleeper-73	Socket.dev
+meldarin.biome-live-tool	sleeper-73	Socket.dev
+meltovik.bookmark-rich-tool	sleeper-73	Socket.dev
+meltuven.graphql-pro-tool	sleeper-73	Socket.dev
+mengsicode.vscode-django-boilerplate	evil-twin	Manifold Security
+miclo.sort-typescript-imports	evil-twin	Manifold Security
+microsoft-dciborow.align-bicep	evil-twin	Manifold Security
+mitrokhin.vsc-easy-studio	sleeper-73	Socket.dev
+mitsuhiko.insta	evil-twin	Manifold Security
+mkdirdocs.mkd-docs	evil-twin	Manifold Security
+mlechevik.nunjucks-rich-pilot	sleeper-73	Socket.dev
+mokridin.material-pro-suite	sleeper-73	Socket.dev
+move.move-analyzer	evil-twin	Manifold Security
+mrekelid.manpages-fast-kit	sleeper-73	Socket.dev
+msjsdreact.react-native-vsce	unclassified	BleepingComputer
+msjsdreact.react-native-vscode	wave-3	Koi Security
+mukundan.python-docs	evil-twin	Manifold Security
+nihilus118.perl-debugger	evil-twin	Manifold Security
+noellee-doc.flint-debug	wave-6	Socket.dev
+npxms.hide-gitignored	evil-twin	Manifold Security
+obyte.oscript-vscode-plugin	evil-twin	Manifold Security
+openeuphoria.vscode-euphoria	evil-twin	Manifold Security
+oss.sfmc-devtools-vscode	evil-twin	Manifold Security
+outsidestormcommand.monochromator-theme	sleeper-73	Socket.dev
+ovchinin.markdown-live-craft	sleeper-73	Socket.dev
+peldravix.rpgiv2free-live-tool	sleeper-73	Socket.dev
+peschanov.dbcode-smart-suite	sleeper-73	Socket.dev
+platarov.podmanager-pro-craft	sleeper-73	Socket.dev
+polikash.pretty-deep-kit	sleeper-73	Socket.dev
+porzhnev.swiftformat-deep-hub	sleeper-73	Socket.dev
+pranlokev.topmodel-fast-suite	sleeper-73	Socket.dev
+prednovik.php-super-pilot	sleeper-73	Socket.dev
+prettier-vsc.vsce-prettier	unclassified	BleepingComputer
+prisma-inc.prisma-studio-assistance	unclassified	BleepingComputer
+pwrs.cem-language-server-vscode	evil-twin	Manifold Security
+qiu.llvm-ir-language-support	evil-twin	Manifold Security
+redmat.vscode-quarkus-pro	unclassified	BleepingComputer
+rumbledb.jsoniq-vscode	evil-twin	Manifold Security
+saoudrizvsce.claude-dev	unclassified	BleepingComputer
+saoudrizvsce.claude-devsce	unclassified	BleepingComputer
+sbsnippets.pytorch-snippets	evil-twin	Manifold Security
+seldovik.cmake-smart-pilot	sleeper-73	Socket.dev
+shinypy.pycode-formatter	sleeper-73	Socket.dev
+shiverov.open-smart-suite	sleeper-73	Socket.dev
+skorzenko.office-deep-studio	sleeper-73	Socket.dev
+slb235.vscode-coffeelint	evil-twin	Manifold Security
+smolyak.slog-smart-studio	sleeper-73	Socket.dev
+solblanco.svelte-vscode	wave-3	Koi Security
+solblanco.svetle-vsce	unclassified	BleepingComputer
+spacesalamanderhook.italian-language-pack	sleeper-73	Socket.dev
+spikearshock.csv-rainbow	sleeper-73	Socket.dev
+sremekov.javascriptsnippets-rich-craft	sleeper-73	Socket.dev
+sremovik.dendron-deep-hub	sleeper-73	Socket.dev
+sremuven.beautify-super-lens	sleeper-73	Socket.dev
+ssagov.uef-snippets	evil-twin	Manifold Security
+stadiumgripier.vscode-onedark-theme	sleeper-73	Socket.dev
+stelbavik.hledger-fast-tool	sleeper-73	Socket.dev
+superneentrance.peacock-colors	sleeper-73	Socket.dev
+superposition.supertoml-analyzer	evil-twin	Manifold Security
+svetelin.industrious-live-hub	sleeper-73	Socket.dev
+svltsweet.svetle-for-cursor	wave-3	Koi Security
+syndakove.todo4vcode-quick-suite	sleeper-73	Socket.dev
+tagovich.zener-pro-craft	sleeper-73	Socket.dev
+tailwind-nuxt.tailwindcss-for-react	unclassified	BleepingComputer
+tamuratak.vscode-lezer	evil-twin	Manifold Security
+tarasenya.todo-rich-hub	sleeper-73	Socket.dev
+taskfile.vscode-task	evil-twin	Manifold Security
+tgreen7.vs-code-node-require	evil-twin	Manifold Security
+thunderprosecutor.autopep8-formatter	sleeper-73	Socket.dev
+tormekov.htmlmustache-fast-craft	sleeper-73	Socket.dev
+tossbers.browser-open-tool	sleeper-73	Socket.dev
+tralarin.firefox-rich-lens	sleeper-73	Socket.dev
+tralaven.c-easy-tool	sleeper-73	Socket.dev
+trenarin.autodocstring-auto-studio	sleeper-73	Socket.dev
+trikarin.database-super-tool	sleeper-73	Socket.dev
+uavcan.dsdl	evil-twin	Manifold Security
+veldekov.csv-pro-suite	sleeper-73	Socket.dev
+veltarik.duplicate-fast-helper	sleeper-73	Socket.dev
+vendrakos.rumdl-pro-kit	sleeper-73	Socket.dev
+vims-vsce.vscode-vim	unclassified	BleepingComputer
+vitalik.solidity	unclassified	BleepingComputer
+vornovin.ionic-easy-kit	sleeper-73	Socket.dev
+vs-publisher-988541.apexsql-power-tools	evil-twin	Manifold Security
+vsceue.volar-vscode	unclassified	BleepingComputer
+weldforick.brightscript-pro-kit	sleeper-73	Socket.dev
+wghats.vscode-nxunit-test-adapter	evil-twin	Manifold Security
+wildlightregain.oxc-lint-format	sleeper-73	Socket.dev
+winnerdomain17.version-lens-tool	sleeper-73	Socket.dev
+wordpresstools.wordpress	evil-twin	Manifold Security
+xnerd.ampscript-language	evil-twin	Manifold Security
+yamlcode.yaml-vscode-extension	unclassified	BleepingComputer
+yardensachs.copy-python-path	evil-twin	Manifold Security
+ydaveluy.xsmp-modeler	evil-twin	Manifold Security
+ydaveluy.xsmp-tas-mdk	evil-twin	Manifold Security
+yelzunik.sqltools-smart-forge	sleeper-73	Socket.dev
+zoxon.monokai-deep	evil-twin	Manifold Security
+zubarets.latex-quick-suite	sleeper-73	Socket.dev
