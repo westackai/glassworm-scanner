@@ -1,261 +1,289 @@
-# GlassWorm-compromised VS Code / OpenVSX extensions.
-# Format: extension-id<TAB>wave<TAB>source
+# Known malicious or high-confidence suspicious VS Code / OpenVSX extension IDs.
+# Format: extension-id<TAB>campaign<TAB>source
 #
-# Updated 2026-08-18 by a 5-source web sweep. Every added id was checked
-# against the vendor page it came from: 203 of 205 appear verbatim in the
-# fetched HTML. Sources: Koi Security (waves 1-5 incl. 'goes native' wave 3),
-# Socket.dev (73-sleeper-extensions, transitive campaign, sleeper activation),
-# Manifold Security (evil-twin), Checkmarx, Truesec, BleepingComputer,
-# TheHackerNews, StepSecurity, Aikido, JFrog.
+# Updated 2026-08-18. Expected data rows: 418.
+# This canonical, conservative ID-level blocklist combines 322 publicly reported
+# GlassWorm-linked entries, one incident-local review entry, and 95 separately
+# attributed malicious entries. Campaign/source fields preserve each distinction;
+# evil-twin and roblox-dropper labels do not mean GlassWorm.
+# A listed ID does not mean every version in every registry was malicious. The
+# audit intentionally matches all installed versions so removed releases and
+# auto-updated installs are not overlooked.
 #
-# NOTE: afine-com/glassworm-hunter's ioc.json (the previous basis for this
-# file) was last updated 2026-04-05 and contains NO wave-3 entries at all.
-# Do not treat it as current.
+# Primary public sources:
+#   Koi waves 1-5:
+#     https://www.koi.ai/blog/glassworm-first-self-propagating-worm-using-invisible-code-hits-openvsx-marketplace
+#     https://www.koi.ai/blog/glassworm-returns-new-wave-openvsx-malware-expose-attacker-infrastructure
+#     https://www.koi.ai/blog/glassworm-goes-native-same-infrastructure-hardened-delivery
+#     https://www.koi.ai/blog/glassworm-goes-mac-fresh-infrastructure-new-tricks
+#     https://www.koi.ai/blog/glassworm-hits-mcp-5th-wave-with-new-delivery-techniques
+#   Socket campaign feed and sleeper research:
+#     https://socket.dev/supply-chain-attacks/glassworm-v2
+#     https://socket.dev/api/public/supply-chain-attacks/glassworm-v2/packages.csv
+#     https://socket.dev/blog/open-vsx-transitive-glassworm-campaign
+#     https://socket.dev/blog/73-open-vsx-sleeper-extensions-glassworm
+#   Yeeth May and June 2026 waves:
+#     https://yeethsecurity.com/blog/2026-04-28-GlassWormBaneForensics
+#     https://yeethsecurity.com/blog/2026-05-25-Glassworm-Solana
+#     https://yeethsecurity.com/blog/2026-06-16-Glassworm-WASM
+#   Separately attributed mangorbit evil-twin campaign:
+#     https://www.manifold.security/blog/open-vsx-evil-twin-extensions
+#   Separately attributed Apee and heyheyhey campaigns:
+#     https://yeethsecurity.com/blog/2026-08-13-Apee-My-Id-Evil-Twin-Open-VSX-Beacon
+#     https://yeethsecurity.com/blog/2026-08-18-Heyheyhey-Roblox-Dropper
 #
-# HELD BACK - reported by one source but not found on any page we fetched.
-# Verify before acting on these:
-#   myexttool.my-command-palette-extension   (Checkmarx Zero (main sample table))
-#   silvia68.console-log-generator   (Checkmarx Zero)
-
-cline-ai-main.cline-ai-agent	wave-1	Koi Security
-codeinklingon.git-worktree-menu	wave-1	Koi Security
-codejoy.codejoy-vscode-extension	wave-1	Koi Security
-ellacrity.recoil	wave-1	Koi Security
-ginfuru.better-nunjucks	wave-1	Koi Security
-grrrck.positron-plus-1-e	wave-1	Koi Security
-jeronimoekerdt.color-picker-universal	wave-1	Koi Security
-jscearcy.rust-doc-viewer	wave-1	Koi Security
-kleinesfilmroellchen.serenity-dsl-syntaxhighlight	wave-1	Koi Security
-l-igh-t.vscode-theme-seti-folder	wave-1	Koi Security
-sirilmp.dark-theme-sm	wave-1	Koi Security
-sissel.shopify-liquid	wave-1	Koi Security
-srcery-colors.srcery-colors	wave-1	Koi Security
-tretinv3.forts-api-extention	wave-1	Koi Security
-adhamu.history-in-sublime-merge	wave-2	Koi Security
-ai-driven-dev.ai-driven-dev	wave-2	Koi Security
-yasuyuky.transient-emacs	wave-2	Koi Security
-cudra-production.vsce-prettier-pro	wave-4	Koi Security
-puccin-development.full-access-catppuccin-pro-extension	wave-4	Koi Security
-studio-velte-distributor.pro-svelte-extension	wave-4	Koi Security
+# Socket CSV fetched 2026-08-18: 364 artifacts / 229 unique IDs;
+# SHA-256 32dc84b7db08f25dc193c8eae9f9f283b580402c0f69f23ab5d4644d9858ec7e.
+# Secondary completeness cross-check: all 243 editor-extension IDs in
+# https://github.com/perplexityai/bumblebee/blob/main/threat_intel/glassworm.json
+# were present when fetched 2026-08-18.
+# Research cutoff: no later report found that explicitly attributed another
+# extension wave to GlassWorm; similar post-June campaigns were kept separate.
+# The sleeper-73 label is a report-family label: 73 initial IDs plus 22 later
+# additions/activations (95 total), with confidence documented by Socket.
+# The 95 non-GlassWorm IDs remain in this canonical file under evil-twin,
+# evil-twin-apee, or roblox-dropper-heyheyhey campaign labels so one list gives
+# complete scanner coverage without conflating threat attribution.
+# Registry/version scope matters: the scanner deliberately blocks by ID, but
+# same-ID releases in another registry or earlier/later versions can be clean.
+# In particular, Socket implicated only Open VSX versions oorzc.ssh-tools@0.5.1,
+# oorzc.i18n-tools-plus@1.6.8, oorzc.mind-map@1.0.61 and
+# oorzc.scss-to-css-compile@1.3.4. Yeeth's Apee report lists malicious 0.0.x
+# releases but explicitly excludes clean 0.0.3 decoys. The heyheyhey report
+# implicates versions 4.7.0 for the five Ro* IDs and 4.6.9 for ManageBlox.
+#
+365businessdevelopment.bdev-al-xml-doc	evil-twin	Manifold Security
 96-studio.json-formatter	wave-5	Socket.dev
 aadarkcode.one-dark-material	wave-5	Koi Security
+aadityanarayan.code-snap	solana-may-2026	Yeeth Security
+academiadosdevs.javafx	evil-twin	Manifold Security
+adhamu.history-in-sublime-merge	wave-2	Koi Security
+ai-driven-dev.ai-driven-dev	wave-2	Koi Security
+akmittal.hugofy	evil-twin-apee	Yeeth Security
+alduncanson.react-hooks-snippets	evil-twin	Manifold Security
+alex-chen.gitee-code-settings-sync	evil-twin	Manifold Security
 aligntool.extension-align-professional-tool	wave-5	Koi Security
+amd.gaia-vscode	evil-twin	Manifold Security
+andenetalexander.vim-cheatsheet	evil-twin	Manifold Security
+andreyvolosovich.monokai-st3	evil-twin	Manifold Security
+anessaeah.php-intelephense-language-support	glassworm-v2	Socket.dev
+angelo-breuer.license-header-manager	evil-twin	Manifold Security
 angular-studio.ng-angular-extension	wave-5	Koi Security
+ansvia.ansvia-vscode	solana-may-2026	Yeeth Security
+archchainturn.twinny-ai-assist	sleeper-73	Socket.dev
+arieldev.sql-visual-debugger	solana-may-2026	Yeeth Security
+arikfr.paraglide-vscode	evil-twin-apee	Yeeth Security
+artsy.artsy-studio-extension-pack	evil-twin	Manifold Security
+asadbinimtiaz.kiro-vscode-extension	solana-may-2026	Yeeth Security
+ashhaddevlab.customtkinter-snippets	evil-twin	Manifold Security
 awesome-codebase.codebase-dart-pro	wave-5	Koi Security
 awesome-codespace.jinja-language-support	wave-5	Socket.dev
 awesomeco.wonder-for-vscode-icons	wave-5	Koi Security
 awwwadem.language-professional-tools	wave-5	Socket.dev
-baksmink.vscode-quokka-extension	wave-5	Socket.dev
-bansheejust22.retro-vhs-theme	wave-5	Socket.dev
-bhbpbarn.vsce-python-indent-extension	wave-5	Koi Security
-blockstoks.easily-gitignore-manage	wave-5	Koi Security
-brategmaqendaalar-studio.pro-prettyxml-formatter	wave-5	Koi Security
-calow-dex.prisma-database-schema-tools	wave-5	Socket.dev
-cod-vok.arko-dev-devsecops	wave-5	Socket.dev
-codbro-dxp.explorer-xml-xquery	wave-5	Socket.dev
-codbroks.compile-runnner-extension	wave-5	Koi Security
-codevunm-tm.cluster-kuberntes-manager	wave-5	Socket.dev
-codevunmis.csv-sql-tsv-rainbow	wave-5	Koi Security
-codwayexten.code-way-extension	wave-5	Koi Security
-cosmic-themes.sql-formatter	wave-5	Koi Security
-craz2team.vscode-todo-extension	wave-5	Socket.dev
-croct-studio.antigravity-model-usage-dashboard	wave-5	Socket.dev
-crotoapp.vscode-xml-extension	wave-5	Koi Security
-daeumer-web.align-format-tool	wave-5	Socket.dev
-daeumer-web.es-linter-for-vs-code	wave-5	Koi Security
-dark-code-studio.flutter-extension	wave-5	Koi Security
-densy-little-studio.wonder-for-vscode-icons	wave-5	Koi Security
-dep-labs-studio.dep-proffesinal-extension	wave-5	Koi Security
-dev-studio-sense.php-comp-tools-vscode	wave-5	Koi Security
-dev-tm.code-python-indent-helper	wave-5	Socket.dev
-devmidu-studio.svg-better-extension	wave-5	Koi Security
-dopbop-studio.vscode-tailwindcss-extension-toolkit	wave-5	Koi Security
-errlenscre.error-lens-finder-ex	wave-5	Koi Security
-exss-studio.yaml-professional-extension	wave-5	Koi Security
-federicanc.dotenv-syntax-highlighting	wave-5	Koi Security
-flape-osx.align-code-format-tool	wave-5	Socket.dev
-floktokbok.autoimport-smart-tool	wave-5	Socket.dev
-flutxvs.vscode-kuberntes-extension	wave-5	Koi Security
-gorth-tm.your-project-manager-organizer	wave-5	Socket.dev
-gvotcha.claude-code-extension	wave-5	Koi Security
-gvotcha.claude-code-extensions	wave-5	Koi Security
-intellipro.extension-json-intelligence	wave-5	Koi Security
-kharizma.vscode-extension-wakatime	wave-5	Koi Security
-ko-zu-gun-studio.synchronization-settings-vscode	wave-5	Koi Security
-kwitch-studio.auto-run-command-extension	wave-5	Koi Security
-lauracode.wrap-selected-code	wave-5	Socket.dev
-lavender-studio.theme-lavender-dreams	wave-5	Koi Security
-littensy-studio.magical-icons	wave-5	Koi Security
-lyu-wen-studio-web-han.better-formatter-vscode	wave-5	Koi Security
-marcus-tm.ruby-intelligence-toolkit	wave-5	Socket.dev
-markvalid.vscode-mdvalidator-extension	wave-5	Koi Security
-mecreation-studio.pyrefly-pro-extension	wave-5	Koi Security
-msw-tm.component-vetur-toolkit	wave-5	Socket.dev
-mswincx.antigravity-cockpit	wave-5	Koi Security
-mswincx.antigravity-cockpit-extension	wave-5	Koi Security
-namop-dex.claude-code-assistant	wave-5	Socket.dev
-namopins.prettier-pro-vscode-extension	wave-5	Koi Security
-oigotm.my-command-palette-extension	wave-5	Koi Security
-oorzc.i18n-tools-plus	wave-5	Socket.dev
-oorzc.mind-map	wave-5	Socket.dev
-oorzc.scss-to-css-compile	wave-5	Socket.dev
-oorzc.ssh-tools	wave-5	Socket.dev
-otobo-vs.csv-query-tsv-rainbow	wave-5	Socket.dev
-otoboss.autoimport-extension	wave-5	Koi Security
-ovixcode.vscode-better-comments	wave-5	Koi Security
-oxigener-tmp.sql-turbo-manager	wave-5	Socket.dev
-pessa07tm.my-js-ts-auto-commands	wave-5	Koi Security
-potstok.dotnet-runtime-extension	wave-5	Koi Security
-pretty-studio-advisor.prettyxml-formatter	wave-5	Koi Security
-prismapp.prisma-vs-code-extension	wave-5	Koi Security
-projmanager.your-project-manager-extension	wave-5	Koi Security
-pubruncode.ccoderunner	wave-5	Koi Security
-pyflowpyr.py-flowpyright-extension	wave-5	Koi Security
-pyscopexte.pyscope-extension	wave-5	Koi Security
-quartz.quartz-markdown-editor	wave-5	Koi Security
-quickrunn.auto-run-command-quick	wave-5	Socket.dev
-redcapcollective.vscode-quarkus-elite-suite	wave-5	Koi Security
-rubyideext.ruby-ide-extension	wave-5	Koi Security
-runnerpost.runner-your-code	wave-5	Koi Security
-shinypy.shiny-extension-for-vscode	wave-5	Koi Security
-sol-studio.solidity-extension	wave-5	Koi Security
-spacetoow.vsc-python-indent	wave-5	Socket.dev
-specstudio.code-wakatime-activity-tracker	wave-5	Socket.dev
-ssgwysc.volar-vscode	wave-5	Koi Security
-studio-jjalaire-team.professional-quarto-extension	wave-5	Koi Security
-sun-shine-studio.shiny-extension-for-vscode	wave-5	Koi Security
-sweaty-tstudio.quarto-report-studio	wave-5	Socket.dev
-sxatvo-tm.compile-runnner-build	wave-5	Socket.dev
-sxatvo.jinja-extension	wave-5	Koi Security
-tamokill12.foundry-pdf-extension	wave-5	Koi Security
-thing-mn.your-flow-extension-for-icons	wave-5	Koi Security
-tima-web-wang.shell-check-utils	wave-5	Koi Security
-tokcodes.import-cost-extension	wave-5	Koi Security
-tool-studio.prettier-pro-code-format	wave-5	Socket.dev
-toowespace.worksets-extension	wave-5	Koi Security
-treedotree.tree-do-todoextension	wave-5	Koi Security
-tucyzirille-studio.angular-pro-tools-extension	wave-5	Koi Security
-turbobase.sql-turbo-tool	wave-5	Koi Security
-twilkbilk.color-highlight-css	wave-5	Koi Security
-vce-brendan-studio-eich.js-debuger-vscode	wave-5	Koi Security
-yamal-dext.wonder-workspace-icons	wave-5	Socket.dev
-yamaprolas.revature-labs-extension	wave-5	Koi Security
-myml.vscode-markdown-plantuml-preview	incident-local	this incident (planted via .vscode/extensions.json)
-365businessdevelopment.bdev-al-xml-doc	evil-twin	Manifold Security
-academiadosdevs.javafx	evil-twin	Manifold Security
-alduncanson.react-hooks-snippets	evil-twin	Manifold Security
-alex-chen.gitee-code-settings-sync	evil-twin	Manifold Security
-amd.gaia-vscode	evil-twin	Manifold Security
-andenetalexander.vim-cheatsheet	evil-twin	Manifold Security
-andreyvolosovich.monokai-st3	evil-twin	Manifold Security
-angelo-breuer.license-header-manager	evil-twin	Manifold Security
-archchainturn.twinny-ai-assist	sleeper-73	Socket.dev
-artsy.artsy-studio-extension-pack	evil-twin	Manifold Security
-ashhaddevlab.customtkinter-snippets	evil-twin	Manifold Security
 azureadb2ctools.aadb2c	evil-twin	Manifold Security
 azurepolicy.azurepolicyextension	evil-twin	Manifold Security
+baksmink.vscode-quokka-extension	wave-5	Socket.dev
+bansheejust22.retro-vhs-theme	wave-5	Socket.dev
 bartmanabyss.amiga-debug	evil-twin	Manifold Security
 bdaeumer.vscode-eslint	evil-twin	Manifold Security
 bdznh.c-cpp-compile-run-windows	evil-twin	Manifold Security
 bersenev.mc-super-pilot	sleeper-73	Socket.dev
 better-ts-errors.better-ts-errors	evil-twin	Manifold Security
+bhbpbarn.vsce-python-indent-extension	wave-5	Koi Security
+bigboi.legally-blind	solana-may-2026	Yeeth Security
+blockstoks.easily-gitignore-manage	wave-5	Koi Security
 boulderzitunnel.vscode-buddies	sleeper-73	Socket.dev
-bphpburn.icons-vscode	unclassified	BleepingComputer
-bphpburnsus.iconesvscode	unclassified	BleepingComputer
+bphpburn.icons-vscode	wave-3	Koi Security
+bphpburnsus.iconesvscode	wave-3	Koi Security
 bradymholt.pgformatter	evil-twin	Manifold Security
+brategmaqendaalar-studio.pro-prettyxml-formatter	wave-5	Koi Security
 breluven.html-smart-suite	sleeper-73	Socket.dev
 brenaven.cursor-rich-helper	sleeper-73	Socket.dev
 bretdoyle.javascript-extensions-pack---js-essentials	evil-twin	Manifold Security
 brixmundo.eca-easy-tool	sleeper-73	Socket.dev
 brixovik.es7-quick-hub	sleeper-73	Socket.dev
 buryagin.openapi-easy-studio	sleeper-73	Socket.dev
+bytegenius.go-live-pro	solana-may-2026	Yeeth Security
+calow-dex.prisma-database-schema-tools	wave-5	Socket.dev
 carveltstone.chatbuddy-auto-suite	sleeper-73	Socket.dev
 casualjim.gotemplate	evil-twin	Manifold Security
+catspace-studio.ng-angular-language	glassworm-v2	Socket.dev
+celsoaf.brightscript	evil-twin-apee	Yeeth Security
 chavyleung.vscode-pnpm-verlens	evil-twin	Manifold Security
 chris-hock.pioasm	evil-twin	Manifold Security
-clangdcode.clangd-vsce	unclassified	BleepingComputer
+clangdcode.clangd-vsce	wave-3	Koi Security
 clangdcode.clangd-vscode	wave-3	Koi Security
+cliagenball.cline-agent-extension	glassworm-v2	Socket.dev
+cline-ai-main.cline-ai-agent	wave-1	Koi Security
 closedtierenchant.vscode-awesome-icons	sleeper-73	Socket.dev
-codevsce.codelddb-vscode	unclassified	BleepingComputer
+clotomoto.code-way-editor	glassworm-v2	Socket.dev
+cod-vok.arko-dev-devsecops	wave-5	Socket.dev
+codbro-dxp.explorer-xml-xquery	wave-5	Socket.dev
+codbroks.compile-runnner-extension	wave-5	Koi Security
+codeinklingon.git-worktree-menu	wave-1	Koi Security
+codejoy.codejoy-vscode-extension	wave-1	Koi Security
+codevsce.codelddb-vscode	wave-3	Koi Security
+codevunm-tm.cluster-kuberntes-manager	wave-5	Socket.dev
+codevunmis.csv-sql-tsv-rainbow	wave-5	Koi Security
+codwayexten.code-way-extension	wave-5	Koi Security
+coneditorfig.config-editor-extension	glassworm-v2	Socket.dev
 configcat.configcat-feature-flags	evil-twin	Manifold Security
+cosmic-themes.sql-formatter	wave-5	Koi Security
 countrepresent49.code-image-preview	sleeper-73	Socket.dev
+craz2team.vscode-todo-extension	wave-5	Socket.dev
+crazy-ndkilddmn.vim-smart-tool	glassworm-v2	Socket.dev
+croct-studio.antigravity-model-usage-dashboard	wave-5	Socket.dev
+crotoapp.vscode-xml-extension	wave-5	Koi Security
 csvmech.csv-sql-tsv-rainbow	wave-3	Koi Security
-csvmech.csvrainbow	unclassified	BleepingComputer
+csvmech.csvrainbow	wave-3	Koi Security
 cubedivervolt.html-code-validate	sleeper-73	Socket.dev
-cweijamysq.sync-settings-vscode	unclassified	BleepingComputer
+cud-dot-prod-studio.prettier-pro-vscode-extension	glassworm-v2	Socket.dev
+cudra-production.vsce-prettier-pro	wave-4	Koi Security
+cweijamysq.sync-settings-vscode	wave-3	Koi Security
+daeumer-web.align-format-tool	wave-5	Socket.dev
+daeumer-web.es-linter-for-vs-code	wave-5	Koi Security
+daeumer-web.style-align-extension	glassworm-v2	Socket.dev
 dalsoven.intellij-live-pilot	sleeper-73	Socket.dev
 dalsovik.dbclient-quick-suite	sleeper-73	Socket.dev
+danlambiase.lmstudio-copilot-provider	solana-may-2026	Yeeth Security
+dark-code-studio.flutter-extension	wave-5	Koi Security
 dart-vsc.code-dart	wave-3	Koi Security
 davidpallinder.rails-test-runner	evil-twin	Manifold Security
+denizhandaklr.copilot-vscode-deepseek	solana-may-2026	Yeeth Security
+densy-little-studio.wonder-for-vscode-icons	wave-5	Koi Security
+dep-labs-studio.dep-proffesinal-extension	wave-5	Koi Security
+dev-studio-sense.php-comp-tools-vscode	wave-5	Koi Security
+dev-tm.code-python-indent-helper	wave-5	Socket.dev
+devmidu-studio.svg-better-extension	wave-5	Koi Security
 doi.fileheadercomment	evil-twin	Manifold Security
+dopbop-studio.vscode-tailwindcss-extension-toolkit	wave-5	Koi Security
 draconzal.phpstan-easy-hub	sleeper-73	Socket.dev
 dranaven.flask-live-craft	sleeper-73	Socket.dev
 drewbourne.vscode-remark-lint	evil-twin	Manifold Security
 drobnyak.angular-auto-helper	sleeper-73	Socket.dev
 drovenko.data-live-suite	sleeper-73	Socket.dev
 eamodas.shiny-vscode	wave-3	Koi Security
+edenlabio.fhir-profiler-tool	evil-twin-apee	Yeeth Security
+ellacrity.recoil	wave-1	Koi Security
+emilerolley.publicodes-language-server	evil-twin-apee	Yeeth Security
 emotionkyoseparate.turkish-language-pack	sleeper-73	Socket.dev
 epichipporedeem.prettier-eslint-formatter	sleeper-73	Socket.dev
-exargd.vsblack	wave-6	Socket.dev
+errlenscre.error-lens-finder-ex	wave-5	Koi Security
+escalion.create-react-component	solana-may-2026	Yeeth Security
+exargd.vsblack	wasm-jun-2026	Socket.dev + Yeeth Security
+exss-studio.yaml-professional-extension	wave-5	Koi Security
 faldenko.explorer-auto-hub	sleeper-73	Socket.dev
+federicanc.dotenv-syntax-highlighting	wave-5	Koi Security
+federicanc.envglow-syntax-highlighting	glassworm-v2	Socket.dev
+finlay-ab.vscode-latex-runner	solana-may-2026	Yeeth Security
+flape-osx.align-code-format-tool	wave-5	Socket.dev
 floktokbok.autoimport	wave-2026	Aikido
-flutcode.flutter-extension	unclassified	BleepingComputer
+floktokbok.autoimport-smart-tool	wave-5	Socket.dev
+flutcode.flutter-extension	wave-3	Koi Security
 flutterando.flutter-mobx	evil-twin	Manifold Security
+flutxvs.vscode-kuberntes-extension	wave-5	Koi Security
 forkelbat.supersigil-rich-hub	sleeper-73	Socket.dev
 frelovin.gitpod-deep-helper	sleeper-73	Socket.dev
 fyltroven.gitchat-fast-tool	sleeper-73	Socket.dev
 galushko.vsclassic-auto-pilot	sleeper-73	Socket.dev
 garaemon.vscode-emacs-tab	evil-twin	Manifold Security
 gastholve.shell-pro-kit	sleeper-73	Socket.dev
+gematikde.codfsh	evil-twin-apee	Yeeth Security
+ghaschel.vscode-angular-html	evil-twin-apee	Yeeth Security
+ginfuru.better-nunjucks	wave-1	Koi Security
 glavin001.unibeautify-vscode	evil-twin	Manifold Security
 gobystrokreactjs.gobystrok	evil-twin	Manifold Security
 goltikov.auto-rich-forge	sleeper-73	Socket.dev
+gonzooo.aurora-gonz	wasm-jun-2026	Yeeth Security
+gorth-tm.your-project-manager-organizer	wave-5	Socket.dev
 grisaven.markdown-live-kit	sleeper-73	Socket.dev
 groksrc.ruby	evil-twin	Manifold Security
 gronarin.auto-super-kit	sleeper-73	Socket.dev
 grozdarov.jinjahtml-easy-studio	sleeper-73	Socket.dev
+grrrck.positron-plus-1-e	wave-1	Koi Security
 gusarev.mermaid-super-studio	sleeper-73	Socket.dev
+gvotcha.claude-code-extension	wave-5	Koi Security
+gvotcha.claude-code-extensions	wave-5	Koi Security
 haelthorn.fractal-fast-studio	sleeper-73	Socket.dev
+hanifmifta.adocs	evil-twin-apee	Yeeth Security
 helixquar.asciidecorator	evil-twin	Manifold Security
 hyperledgercomposer.composer-support-client	evil-twin	Manifold Security
+icepower1997.glacier-cave-theme	glassworm-v2	Socket.dev
 iconkief.icon-theme-material	wave-3	Koi Security
-iconkieftwo.icon-theme-materiall	unclassified	BleepingComputer
+iconkieftwo.icon-theme-materiall	wave-3	Koi Security
+ilvvilab.php-composr-tool-extension	glassworm-v2	Socket.dev
+inangalek.project-manager-extension	glassworm-v2	Socket.dev
 insigne.powershell	evil-twin	Manifold Security
+intellipro.extension-json-intelligence	wave-5	Koi Security
 iotaledger.iota-move	evil-twin	Manifold Security
+ishantgupta777.pipfi-code-share	solana-may-2026	Yeeth Security
+istornz.koby	wasm-jun-2026	Yeeth Security
 jakeboone02.cypher-query-language	evil-twin	Manifold Security
 jcamp.dotnet-test-provider-view	evil-twin	Manifold Security
 jeremy38100.init-node-script	evil-twin	Manifold Security
+jeronimo-self-dev.smart-color-picker	glassworm-v2	Socket.dev
+jeronimoekerdt.color-picker-universal	wave-1	Koi Security
+jkiviluoto.tws	evil-twin-apee	Yeeth Security
+joaompfp.hermes-ai-agent	solana-may-2026	Yeeth Security
+jscearcy.rust-doc-viewer	wave-1	Koi Security
 jt.jakt	evil-twin	Manifold Security
+jupstudio.dotenv-tools-dev	glassworm-v2	Socket.dev
+juptool.jupyter-pro-tool-extension	glassworm-v2	Socket.dev
 kaellarkin.hugo-shortcode-syntax	evil-twin	Manifold Security
+kalinka.shellcheck-auto-craft	glassworm-v2	Socket.dev
 karnenko.cursorless-pro-pilot	sleeper-73	Socket.dev
 karnikov.better-rich-studio	sleeper-73	Socket.dev
 keltarin.android-deep-hub	sleeper-73	Socket.dev
 keyacrosslaud.auto-loop-for-antigravity	sleeper-73	Socket.dev
-klustfix.kluster-code-verify	unclassified	BleepingComputer
+kharizma.vscode-extension-wakatime	wave-5	Koi Security
+khromok.react-deep-tool	glassworm-v2	Socket.dev
+kleinesfilmroellchen.serenity-dsl-syntaxhighlight	wave-1	Koi Security
+klustfix.kluster-code-verify	wave-3	Koi Security
+kmsbofoxpf.fcrhyhewjv	wasm-jun-2026	Yeeth Security
+ko-zu-gun-studio.synchronization-settings-vscode	wave-5	Koi Security
+kotpot.modern-css-toolkit	glassworm-v2	Socket.dev
 krosarin.npm-fast-studio	sleeper-73	Socket.dev
 krosaven.dot-live-forge	sleeper-73	Socket.dev
 krosovik.laravel-quick-pilot	sleeper-73	Socket.dev
 krundoven.ironplc-fast-hub	sleeper-73	Socket.dev
 kuldaran.search-smart-forge	sleeper-73	Socket.dev
+kwinsolin.act-extension	glassworm-v2	Socket.dev
+kwinsolin.better-cpp-tool	glassworm-v2	Socket.dev
+kwitch-studio.auto-run-command-extension	wave-5	Koi Security
+l-igh-t.vscode-theme-seti-folder	wave-1	Koi Security
 lairinspectortrek70.todo-highlighter	sleeper-73	Socket.dev
+lauracode.wrap-selected-code	wave-5	Socket.dev
+lavender-studio.theme-lavender-dreams	wave-5	Koi Security
 lavrentev.project-live-studio	sleeper-73	Socket.dev
 lego-education.ev3-micropython	evil-twin	Manifold Security
 lesnitsky.tikbook-easy-lens	sleeper-73	Socket.dev
 levertion.mcjson	evil-twin	Manifold Security
+littensy-studio.magical-icons	wave-5	Koi Security
+ll-service-vm-studio.vscode-clangd-cross-platform	glassworm-v2	Socket.dev
+long-kudo.vscode-claude-status	solana-may-2026	Yeeth Security
+luongnd.edge	evil-twin-apee	Yeeth Security
+lyu-wen-studio-web-han.better-formatter-vscode	wave-5	Koi Security
 lyywemhan.code-formatter-and-minifier-vscode	wave-3	Koi Security
 madhavd1.javadoc-tools	evil-twin	Manifold Security
 magne-sjaastad.opm-flow-editor-support	evil-twin	Manifold Security
+manageblox.manageblox	roblox-dropper-heyheyhey	Yeeth Security
 maptz.regionfolder	evil-twin	Manifold Security
 marabenov.graphql-super-craft	sleeper-73	Socket.dev
+marcus-tm.ruby-intelligence-toolkit	wave-5	Socket.dev
 marinhobrandao.angular2tests	evil-twin	Manifold Security
 marketplace.visualstudio	evil-twin	Manifold Security
+markvalid.vscode-mdvalidator-extension	wave-5	Koi Security
+martyev.turbo-deep-tool	glassworm-v2	Socket.dev
 mashulin.vue-easy-studio	sleeper-73	Socket.dev
+mccprogrammer.debug-datastructures-visualizer-extension	solana-may-2026	Yeeth Security
+mecreation-studio.pyrefly-pro-extension	wave-5	Koi Security
 meldarin.biome-live-tool	sleeper-73	Socket.dev
 meltovik.bookmark-rich-tool	sleeper-73	Socket.dev
 meltuven.graphql-pro-tool	sleeper-73	Socket.dev
 mengsicode.vscode-django-boilerplate	evil-twin	Manifold Security
 miclo.sort-typescript-imports	evil-twin	Manifold Security
 microsoft-dciborow.align-bicep	evil-twin	Manifold Security
+mitre-health.vscode-language-fsh	evil-twin-apee	Yeeth Security
 mitrokhin.vsc-easy-studio	sleeper-73	Socket.dev
 mitsuhiko.insta	evil-twin	Manifold Security
 mkdirdocs.mkd-docs	evil-twin	Manifold Security
@@ -263,86 +291,182 @@ mlechevik.nunjucks-rich-pilot	sleeper-73	Socket.dev
 mokridin.material-pro-suite	sleeper-73	Socket.dev
 move.move-analyzer	evil-twin	Manifold Security
 mrekelid.manpages-fast-kit	sleeper-73	Socket.dev
-msjsdreact.react-native-vsce	unclassified	BleepingComputer
+msjsdreact.react-native-vsce	wave-3	Koi Security
 msjsdreact.react-native-vscode	wave-3	Koi Security
+msw-tm.component-vetur-toolkit	wave-5	Socket.dev
+mswincx.antigravity-cockpit	wave-5	Koi Security
+mswincx.antigravity-cockpit-extension	wave-5	Koi Security
 mukundan.python-docs	evil-twin	Manifold Security
+myexttool.my-command-palette-extension	glassworm-v2	Socket.dev
+myml.vscode-markdown-plantuml-preview	incident-local-suspicious-recommendation	this incident (planted via .vscode/extensions.json)
+namop-dex.claude-code-assistant	wave-5	Socket.dev
+namopins.prettier-pro-vscode-extension	wave-5	Koi Security
+nazarov.errorlens-fast-suite	glassworm-v2	Socket.dev
+nhunter0.dll-structure-viewer	solana-may-2026	Yeeth Security
 nihilus118.perl-debugger	evil-twin	Manifold Security
-noellee-doc.flint-debug	wave-6	Socket.dev
+noellee-doc.flint-debug	wasm-jun-2026	Socket.dev + Yeeth Security
 npxms.hide-gitignored	evil-twin	Manifold Security
 obyte.oscript-vscode-plugin	evil-twin	Manifold Security
+oigotm.my-command-palette-extension	wave-5	Koi Security
+oldjobobo.retro-82-theme	solana-may-2026	Yeeth Security
+oldjrzobobo.miasma-theme	solana-may-2026	Yeeth Security
+oorzc.i18n-tools-plus	oorzc-account-compromise-jan-2026	Socket.dev
+oorzc.mind-map	oorzc-account-compromise-jan-2026	Socket.dev
+oorzc.scss-to-css-compile	oorzc-account-compromise-jan-2026	Socket.dev
+oorzc.ssh-tools	oorzc-account-compromise-jan-2026	Socket.dev
 openeuphoria.vscode-euphoria	evil-twin	Manifold Security
 oss.sfmc-devtools-vscode	evil-twin	Manifold Security
+otobo-vs.csv-query-tsv-rainbow	wave-5	Socket.dev
+otoboss.autoimport-extension	wave-5	Koi Security
 outsidestormcommand.monochromator-theme	sleeper-73	Socket.dev
 ovchinin.markdown-live-craft	sleeper-73	Socket.dev
+ovixcode.vscode-better-comments	wave-5	Koi Security
+oxigener-tmp.sql-turbo-manager	wave-5	Socket.dev
+pdragon.azure-rbs-workbench	solana-may-2026	Yeeth Security
 peldravix.rpgiv2free-live-tool	sleeper-73	Socket.dev
 peschanov.dbcode-smart-suite	sleeper-73	Socket.dev
+pessa07tm.my-js-ts-auto-commands	wave-5	Koi Security
 platarov.podmanager-pro-craft	sleeper-73	Socket.dev
 polikash.pretty-deep-kit	sleeper-73	Socket.dev
 porzhnev.swiftformat-deep-hub	sleeper-73	Socket.dev
+potstok.dotnet-runtime-extension	wave-5	Koi Security
 pranlokev.topmodel-fast-suite	sleeper-73	Socket.dev
 prednovik.php-super-pilot	sleeper-73	Socket.dev
-prettier-vsc.vsce-prettier	unclassified	BleepingComputer
-prisma-inc.prisma-studio-assistance	unclassified	BleepingComputer
+prettier-vsc.vsce-prettier	wave-3	Koi Security
+pretty-studio-advisor.prettyxml-formatter	wave-5	Koi Security
+prisma-inc.prisma-studio-assistance	wave-3	Koi Security
+prismapp.prisma-vs-code-extension	wave-5	Koi Security
+projmanager.your-project-manager-extension	wave-5	Koi Security
+pubruncode.ccoderunner	wave-5	Koi Security
+puccin-development.full-access-catppuccin-pro-extension	wave-4	Koi Security
+pulselireckon.code-usage-stats	glassworm-v2	Socket.dev
 pwrs.cem-language-server-vscode	evil-twin	Manifold Security
+pyflowpyr.py-flowpyright-extension	wave-5	Koi Security
+pyscopexte.pyscope-extension	wave-5	Koi Security
 qiu.llvm-ir-language-support	evil-twin	Manifold Security
-redmat.vscode-quarkus-pro	unclassified	BleepingComputer
+qizhao.element-vue-snippets	wasm-jun-2026	Yeeth Security
+quartz.quartz-markdown-editor	wave-5	Koi Security
+quickrunn.auto-run-command-quick	wave-5	Socket.dev
+randevtek-dev.extension-thunder-client-free	glassworm-v2	Socket.dev
+razinov.spell-rich-hub	glassworm-v2	Socket.dev
+redcapcollective.vscode-quarkus-elite-suite	wave-5	Koi Security
+reditorsupporter.r-vscode	glassworm-v2	Socket.dev
+redmat.vscode-quarkus-pro	wave-3	Koi Security
+rocontrol.rocontrol	roblox-dropper-heyheyhey	Yeeth Security
+roflow.roflow	roblox-dropper-heyheyhey	Yeeth Security
+ropilot.ropilot	roblox-dropper-heyheyhey	Yeeth Security
+roplanner.roplanner	roblox-dropper-heyheyhey	Yeeth Security
+rotasker.rotasker	roblox-dropper-heyheyhey	Yeeth Security
+rubyideext.ruby-ide-extension	wave-5	Koi Security
 rumbledb.jsoniq-vscode	evil-twin	Manifold Security
-saoudrizvsce.claude-dev	unclassified	BleepingComputer
-saoudrizvsce.claude-devsce	unclassified	BleepingComputer
+runnerpost.runner-your-code	wave-5	Koi Security
+rusakov.indent-quick-pilot	glassworm-v2	Socket.dev
+ruslanmv.gitpilot-vscode	solana-may-2026	Yeeth Security
+saoudrizvsce.claude-dev	wave-3	Koi Security
+saoudrizvsce.claude-devsce	wave-3	Koi Security
 sbsnippets.pytorch-snippets	evil-twin	Manifold Security
 seldovik.cmake-smart-pilot	sleeper-73	Socket.dev
+sfqkrvjrtl.prdoypxjbi	wasm-jun-2026	Yeeth Security
 shinypy.pycode-formatter	sleeper-73	Socket.dev
+shinypy.shiny-extension-for-vscode	wave-5	Koi Security
 shiverov.open-smart-suite	sleeper-73	Socket.dev
+shulgin.deno-rich-lens	glassworm-v2	Socket.dev
+silvia68.console-log-generator	glassworm-v2	Socket.dev
+singularityinc.claude-notifier	solana-may-2026	Yeeth Security
+sirilmp.dark-theme-sm	wave-1	Koi Security
+sissel.shopify-liquid	wave-1	Koi Security
 skorzenko.office-deep-studio	sleeper-73	Socket.dev
+skypfrain.vs-cc-switch	solana-may-2026	Yeeth Security
 slb235.vscode-coffeelint	evil-twin	Manifold Security
 smolyak.slog-smart-studio	sleeper-73	Socket.dev
+sol-studio.solidity-extension	wave-5	Koi Security
 solblanco.svelte-vscode	wave-3	Koi Security
-solblanco.svetle-vsce	unclassified	BleepingComputer
+solblanco.svetle-vsce	wave-3	Koi Security
 spacesalamanderhook.italian-language-pack	sleeper-73	Socket.dev
+spacetoow.vsc-python-indent	wave-5	Socket.dev
+specstudio.code-wakatime-activity-tracker	wave-5	Socket.dev
 spikearshock.csv-rainbow	sleeper-73	Socket.dev
+srcery-colors.srcery-colors	wave-1	Koi Security
 sremekov.javascriptsnippets-rich-craft	sleeper-73	Socket.dev
 sremovik.dendron-deep-hub	sleeper-73	Socket.dev
 sremuven.beautify-super-lens	sleeper-73	Socket.dev
 ssagov.uef-snippets	evil-twin	Manifold Security
+ssgwysc.volar-vscode	wave-5	Koi Security
+stackmason1.synesthesia-theme	glassworm-v2	Socket.dev
 stadiumgripier.vscode-onedark-theme	sleeper-73	Socket.dev
+starodub.kodio-smart-forge	glassworm-v2	Socket.dev
 stelbavik.hledger-fast-tool	sleeper-73	Socket.dev
+stormier.vue-dsfr-snippets	evil-twin-apee	Yeeth Security
+studio-jja-laire.quarto-advanced-suite	glassworm-v2	Socket.dev
+studio-jjalaire-team.professional-quarto-extension	wave-5	Koi Security
+studio-velte-distributor.pro-svelte-extension	wave-4	Koi Security
+sun-shine-studio.shiny-extension-for-vscode	wave-5	Koi Security
+superdoc-dev.superdoc-vscode-ext	solana-may-2026	Yeeth Security
 superneentrance.peacock-colors	sleeper-73	Socket.dev
 superposition.supertoml-analyzer	evil-twin	Manifold Security
+sv-codex.gitlens-code-history-explorer	glassworm-v2	Socket.dev
 svetelin.industrious-live-hub	sleeper-73	Socket.dev
 svltsweet.svetle-for-cursor	wave-3	Koi Security
+sweaty-toys-stuios.extension-volar-tool-kit	glassworm-v2	Socket.dev
+sweaty-tstudio.quarto-report-studio	wave-5	Socket.dev
+sxatvo-tm.compile-runnner-build	wave-5	Socket.dev
+sxatvo.jinja-extension	wave-5	Koi Security
 syndakove.todo4vcode-quick-suite	sleeper-73	Socket.dev
 tagovich.zener-pro-craft	sleeper-73	Socket.dev
-tailwind-nuxt.tailwindcss-for-react	unclassified	BleepingComputer
+tailwind-nuxt.tailwindcss-for-react	wave-3	Koi Security
+tamokill12.foundry-pdf-extension	wave-5	Koi Security
+tamokill12.pdf-extension	glassworm-v2	Socket.dev
 tamuratak.vscode-lezer	evil-twin	Manifold Security
 tarasenya.todo-rich-hub	sleeper-73	Socket.dev
 taskfile.vscode-task	evil-twin	Manifold Security
+tettetrouse0t.geode-amethyst-theme	glassworm-v2	Socket.dev
 tgreen7.vs-code-node-require	evil-twin	Manifold Security
+thing-mn.your-flow-extension-for-icons	wave-5	Koi Security
 thunderprosecutor.autopep8-formatter	sleeper-73	Socket.dev
+thykka.superpowers	solana-may-2026	Yeeth Security
+tima-web-wang.shell-check-utils	wave-5	Koi Security
+tokcodes.import-cost-extension	wave-5	Koi Security
+tool-studio.prettier-pro-code-format	wave-5	Socket.dev
+toowespace.worksets-extension	wave-5	Koi Security
 tormekov.htmlmustache-fast-craft	sleeper-73	Socket.dev
 tossbers.browser-open-tool	sleeper-73	Socket.dev
 tralarin.firefox-rich-lens	sleeper-73	Socket.dev
 tralaven.c-easy-tool	sleeper-73	Socket.dev
+treedotree.tree-do-todoextension	wave-5	Koi Security
 trenarin.autodocstring-auto-studio	sleeper-73	Socket.dev
+tretinv3.forts-api-extention	wave-1	Koi Security
 trikarin.database-super-tool	sleeper-73	Socket.dev
+trovizno.arko-extension	glassworm-v2	Socket.dev
+tucyzirille-studio.angular-pro-tools-extension	wave-5	Koi Security
+turbobase.sql-turbo-tool	wave-5	Koi Security
+twilkbilk.color-highlight-css	wave-5	Koi Security
 uavcan.dsdl	evil-twin	Manifold Security
+vadim-studio-cn.extension-lldb-pro-vscode	glassworm-v2	Socket.dev
+vce-brendan-studio-eich.js-debuger-vscode	wave-5	Koi Security
+vegamo.deepcode-vscode	solana-may-2026	Yeeth Security
 veldekov.csv-pro-suite	sleeper-73	Socket.dev
 veltarik.duplicate-fast-helper	sleeper-73	Socket.dev
 vendrakos.rumdl-pro-kit	sleeper-73	Socket.dev
-vims-vsce.vscode-vim	unclassified	BleepingComputer
-vitalik.solidity	unclassified	BleepingComputer
+victorbetweenhose.agent-auto-accept	glassworm-v2	Socket.dev
+vims-vsce.vscode-vim	wave-3	Koi Security
+vitalik.solidity	wave-3	Koi Security
 vornovin.ionic-easy-kit	sleeper-73	Socket.dev
 vs-publisher-988541.apexsql-power-tools	evil-twin	Manifold Security
-vsceue.volar-vscode	unclassified	BleepingComputer
+vsceue.volar-vscode	wave-3	Koi Security
 weldforick.brightscript-pro-kit	sleeper-73	Socket.dev
 wghats.vscode-nxunit-test-adapter	evil-twin	Manifold Security
 wildlightregain.oxc-lint-format	sleeper-73	Socket.dev
 winnerdomain17.version-lens-tool	sleeper-73	Socket.dev
 wordpresstools.wordpress	evil-twin	Manifold Security
 xnerd.ampscript-language	evil-twin	Manifold Security
-yamlcode.yaml-vscode-extension	unclassified	BleepingComputer
+yamal-dext.wonder-workspace-icons	wave-5	Socket.dev
+yamaprolas.revature-labs-extension	wave-5	Koi Security
+yamlcode.yaml-vscode-extension	wave-3	Koi Security
 yardensachs.copy-python-path	evil-twin	Manifold Security
+yasuyuky.transient-emacs	wave-2	Koi Security
 ydaveluy.xsmp-modeler	evil-twin	Manifold Security
 ydaveluy.xsmp-tas-mdk	evil-twin	Manifold Security
 yelzunik.sqltools-smart-forge	sleeper-73	Socket.dev
+zgy.opencode-vscode-ui	solana-may-2026	Yeeth Security
 zoxon.monokai-deep	evil-twin	Manifold Security
 zubarets.latex-quick-suite	sleeper-73	Socket.dev

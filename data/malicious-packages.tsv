@@ -1,0 +1,462 @@
+# Malicious npm / PyPI packages — name<TAB>ecosystem<TAB>versions<TAB>campaign<TAB>source
+#
+# 'versions' semantics used by the scanner:
+#   1.2.3,1.2.4   exact list        1.3.0-1.3.4   inclusive range        *   all versions
+#
+# Built 2026-08-18 from a 5-source sweep (StepSecurity, Socket.dev, Aikido, JFrog,
+# Endor Labs, Sonatype, Wiz, Checkmarx, OSV/GitHub advisories), merged with the
+# incident-confirmed GlassWorm seed set.
+# Spot-verified against api.osv.dev: 11 of a random 12 returned a real MAL-/GHSA
+# advisory for the exact name@version pair. 57 malformed records were dropped.
+#
+# Campaigns: GlassWorm/PolinRider npm wave, GlassWorm blockchain wave, Shai-Hulud
+# 1.0/2.0/'Here We Go Again'/Mini, Qix maintainer phish (chalk/debug), Miasma,
+# TanStack/TeamPCP, dependency-confusion profiling, PyPI 'Hades' wave.
+
+@adminide-stack/clock-tik-browser	npm	12.0.24	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@adminide-stack/yantra-mobile	npm	12.0.33	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@agnoliaarisian7180/string-argv	npm	0.3.0,0.3.1	GlassWorm (PolinRider / March 2026 npm wave)	https://www.stepsecurity.io/blog/malicious-npm-releases-found-in-popul
+@aifabrix/miso-client	npm	4.7.2	GlassWorm (PolinRider / March 2026 npm wave)	https://www.aikido.dev/blog/glassworm-returns-unicode-attack-github-np
+@antv/g	npm	6.4.1,6.5.1	Mini Shai-Hulud Wave 5 / TeamPCP - AntV wave (	https://www.stepsecurity.io/blog/shai-hulud-here-we-go-again-mass-npm-
+@antv/g2	npm	5.5.8,5.6.8	Mini Shai-Hulud Wave 5 / TeamPCP - AntV wave (	https://safedep.io/mini-shai-hulud-strikes-again-314-npm-packages-comp
+@antv/g2plot	npm	2.5.35,2.6.35	Mini Shai-Hulud Wave 5 / TeamPCP - AntV wave (	https://safedep.io/mini-shai-hulud-strikes-again-314-npm-packages-comp
+@antv/g6	npm	5.2.1,5.3.1	Mini Shai-Hulud Wave 5 / TeamPCP - AntV wave (	https://safedep.io/mini-shai-hulud-strikes-again-314-npm-packages-comp
+@antv/l7	npm	2.26.10,2.27.10	Mini Shai-Hulud Wave 5 / TeamPCP - AntV wave (	https://safedep.io/mini-shai-hulud-strikes-again-314-npm-packages-comp
+@antv/s2	npm	2.8.1,2.9.1	Mini Shai-Hulud Wave 5 / TeamPCP - AntV wave (	https://safedep.io/mini-shai-hulud-strikes-again-314-npm-packages-comp
+@antv/scale	npm	0.6.2,0.7.2	Mini Shai-Hulud Wave 5 / TeamPCP - AntV wave (	https://safedep.io/mini-shai-hulud-strikes-again-314-npm-packages-comp
+@antv/x6	npm	3.2.7,3.3.7	Mini Shai-Hulud Wave 5 / TeamPCP - AntV wave (	https://safedep.io/mini-shai-hulud-strikes-again-314-npm-packages-comp
+@arv-bedrock/auth	npm	1.1.7,1.1.8	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@arv-bedrock/auth-admin	npm	1.0.2,1.0.3	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@arv-bedrock/auth-sso	npm	1.6.1,1.6.2	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@arv-bedrock/auth-sso-backend	npm	1.7.1,1.7.2	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@arv-bedrock/logger	npm	1.7.1,1.7.2	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/avro-schema-parser	npm	3.0.25,3.0.26	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/bundler	npm	0.6.5,0.6.6	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/cli	npm	4.1.2,4.1.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/converter	npm	1.6.3,1.6.4	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/diff	npm	0.5.1,0.5.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/dotnet-rabbitmq-template	npm	1.0.1,1.0.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/edavisualiser	npm	1.2.1,1.2.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/generator	npm	2.8.5,2.8.6,3.3.1	Miasma (miasma-train-p1) - AsyncAPI compromise	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/generator-components	npm	0.3.2,0.3.3,0.7.1	Miasma (miasma-train-p1) - AsyncAPI compromise	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/generator-helpers	npm	0.2.1,0.2.2,1.1.1	Miasma (miasma-train-p1) - AsyncAPI compromise	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/generator-react-sdk	npm	1.1.4,1.1.5	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/go-watermill-template	npm	0.2.76,0.2.77	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/html-template	npm	3.3.2,3.3.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/java-spring-cloud-stream-template	npm	0.13.5,0.13.6	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/java-spring-template	npm	1.6.1,1.6.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/java-template	npm	0.3.5,0.3.6	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/keeper	npm	0.0.2,0.0.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/markdown-template	npm	1.6.8,1.6.9	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/modelina	npm	5.10.2,5.10.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/modelina-cli	npm	5.10.2,5.10.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/multi-parser	npm	2.2.1,2.2.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/nodejs-template	npm	3.0.5,3.0.6	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/nodejs-ws-template	npm	0.10.1,0.10.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/nunjucks-filters	npm	2.1.1,2.1.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/openapi-schema-parser	npm	3.0.25,3.0.26	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/optimizer	npm	1.0.5,1.0.6	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/parser	npm	3.4.1,3.4.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/php-template	npm	0.1.1,0.1.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/problem	npm	1.0.1,1.0.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/protobuf-schema-parser	npm	3.5.2,3.5.3,3.6.1	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/python-paho-template	npm	0.2.14,0.2.15	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/react-component	npm	2.6.6,2.6.7	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/server-api	npm	0.16.24,0.16.25	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/specs	npm	6.8.2,6.8.3,6.9.1,6.10.1,6.11.2-alpha.1,6.11.2	Miasma (miasma-train-p1) - AsyncAPI compromise	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/studio	npm	1.0.2,1.0.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@asyncapi/web-component	npm	2.6.6,2.6.7	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@cacheable/memory	npm	2.2.1	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@cacheable/net	npm	2.1.1	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@cacheable/node-cache	npm	3.1.2	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@cacheable/utils	npm	2.5.1	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@cap-js/db-service	npm	2.10.1	Mini Shai-Hulud - SAP CAP wave (April 29 2026)	https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attack
+@cap-js/postgres	npm	2.2.2	Mini Shai-Hulud - SAP CAP wave (April 29 2026)	https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attack
+@cap-js/sqlite	npm	2.2.2	Mini Shai-Hulud - SAP CAP wave (April 29 2026)	https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attack
+@capibar.chat/ui-kit	npm	99.5.7	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@ce-rwb/ce-tools-editor-admin	npm	3.5.22	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@ce-rwb/ce-tools-editor-core	npm	3.5.22	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@ce-rwb/ce-tools-editor-render	npm	3.5.22	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/administration	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/arenadata-db	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/base-static-page	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/business-solutions	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/cloud-dns	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/cnapp-ui	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/cp-api-gw	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/datagrid	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/dataplatform	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/dataplatform-metastore	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/dataplatform-trino	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/employees	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/enterprise	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/floating-ips	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/logaas	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/marketplace-gigachat	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/ml-ai-agents-agent	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/ml-ai-agents-agent-system	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/monitoring	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/security-groups	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/ssh-keys	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/support	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/svp-baas	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/svp-interfaces	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/svp-s3-storage	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@cloudplatform-single-spa/vpn	npm	100.100.100	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@coveops/abi	npm	2.0.1	Qix maintainer phish (Sept 8-9 2025 crypto-cli	https://jfrog.com/blog/new-compromised-packages-in-largest-npm-attack-
+@crowdstrike/commitlint	npm	8.1.1,8.1.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@crowdstrike/falcon-shoelace	npm	0.4.1,0.4.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@crowdstrike/foundry-js	npm	0.19.1,0.19.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@crowdstrike/glide-core	npm	0.34.2,0.34.3	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@crowdstrike/logscale-dashboard	npm	1.205.1,1.205.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@crowdstrike/logscale-file-editor	npm	1.205.1,1.205.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@crowdstrike/logscale-parser-edit	npm	1.205.1,1.205.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@crowdstrike/logscale-search	npm	1.205.1,1.205.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@crowdstrike/tailwind-toucan-base	npm	5.0.1,5.0.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/deluge	npm	7.2.1,7.2.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/golang-template	npm	1.4.2,1.4.3	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/magnet-link	npm	4.0.3,4.0.4	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/ngx-codemirror	npm	7.0.1,7.0.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/ngx-csv	npm	6.0.1,6.0.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/ngx-emoji-mart	npm	9.2.1,9.2.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/ngx-rightclick	npm	4.0.1,4.0.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/qbittorrent	npm	9.7.1,9.7.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/react-adsense	npm	2.0.1,2.0.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/shared-torrent	npm	6.3.1,6.3.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/tinycolor	npm	4.1.1,4.1.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/torrent-file	npm	4.1.1,4.1.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/transmission	npm	7.3.1	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@ctrl/ts-base32	npm	4.0.1,4.0.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@data-science/llm	npm	3.5.22	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@deliveroo/determinator	npm	0.2.1	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@deliveroo/reevent	npm	1.0.1	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@duckdb/duckdb-wasm	npm	1.29.2	Qix-wave crypto-clipper - duckdb_admin account	https://github.com/duckdb/duckdb-node/security/advisories/GHSA-w62p-hx
+@duckdb/node-api	npm	1.3.3	Qix-wave crypto-clipper - duckdb_admin account	https://github.com/duckdb/duckdb-node/security/advisories/GHSA-w62p-hx
+@duckdb/node-bindings	npm	1.3.3	Qix-wave crypto-clipper - duckdb_admin account	https://github.com/duckdb/duckdb-node/security/advisories/GHSA-w62p-hx
+@ensdomains/address-encoder	npm	1.1.5	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/buffer	npm	0.1.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/content-hash	npm	3.0.1	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/dnsprovejs	npm	0.5.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/ens-avatar	npm	1.0.4	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/ens-contracts	npm	1.6.1	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/ens-validation	npm	0.1.1	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/ensjs	npm	4.0.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/eth-ens-namehash	npm	2.0.16	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/mock	npm	2.1.52	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/name-wrapper	npm	1.0.1	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/react-ens-address	npm	0.0.32	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/reverse-records	npm	1.0.1	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/thorin	npm	0.6.51	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/ui	npm	3.4.6	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@ensdomains/web3modal	npm	1.10.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@iflow-mcp/watercrawl-watercrawl-mcp	npm	1.3.0-1.3.4,1.3.0,1.3.1,1.3.2,1.3.3,1.3.4	GlassWorm (PolinRider / March 2026 npm wave)	https://www.aikido.dev/blog/glassworm-returns-unicode-attack-github-np
+@mastra/core	npm	1.42.1	Mastra scope takeover / easy-day-js (June 17 2	https://www.stepsecurity.io/blog/mastra-npm-packages-compromised-using
+@mastra/memory	npm	1.20.4	Mastra scope takeover / easy-day-js (June 17 2	https://www.stepsecurity.io/blog/mastra-npm-packages-compromised-using
+@mastra/schema-compat	npm	1.2.12	Mastra scope takeover / easy-day-js (June 17 2	https://www.stepsecurity.io/blog/mastra-npm-packages-compromised-using
+@mastra/server	npm	2.1.1	Mastra scope takeover / easy-day-js (June 17 2	https://www.stepsecurity.io/blog/mastra-npm-packages-compromised-using
+@mistralai/mistralai	npm	2.2.2,2.2.3,2.2.4	Mini Shai-Hulud / TeamPCP - May 11 2026 same-d	https://www.wiz.io/blog/mini-shai-hulud-strikes-again-tanstack-more-np
+@nativescript-community/text	npm	1.6.9,1.6.10,1.6.11,1.6.12,1.6.13	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@nativescript-community/ui-material-core	npm	7.2.72,7.2.73,7.2.74,7.2.75,7.2.76	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+@nx/devkit	npm	20.9.0,21.5.0	s1ngularity (Nx, Aug 26 2025)	https://github.com/nrwl/nx/security/advisories/GHSA-cxm3-wv7p-598c
+@nx/enterprise-cloud	npm	3.2.0	s1ngularity (Nx, Aug 26 2025)	https://github.com/nrwl/nx/security/advisories/GHSA-cxm3-wv7p-598c
+@nx/eslint	npm	21.5.0	s1ngularity (Nx, Aug 26 2025)	https://github.com/nrwl/nx/security/advisories/GHSA-cxm3-wv7p-598c
+@nx/js	npm	20.9.0,21.5.0	s1ngularity (Nx, Aug 26 2025)	https://github.com/nrwl/nx/security/advisories/GHSA-cxm3-wv7p-598c
+@nx/key	npm	3.2.0	s1ngularity (Nx, Aug 26 2025)	https://github.com/nrwl/nx/security/advisories/GHSA-cxm3-wv7p-598c
+@nx/node	npm	20.9.0,21.5.0	s1ngularity (Nx, Aug 26 2025)	https://github.com/nrwl/nx/security/advisories/GHSA-cxm3-wv7p-598c
+@nx/workspace	npm	20.9.0,21.5.0	s1ngularity (Nx, Aug 26 2025)	https://github.com/nrwl/nx/security/advisories/GHSA-cxm3-wv7p-598c
+@opensearch-project/opensearch	npm	3.5.3,3.6.2,3.7.0,3.8.0	Mini Shai-Hulud / TeamPCP - May 11 2026 same-d	https://socket.dev/blog/tanstack-npm-packages-compromised-mini-shai-hu
+@or-sdk/auth	npm	0.38.1,0.38.2,0.38.3	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@or-sdk/authorizer	npm	0.26.7,0.26.8,0.26.9	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@payments-widget/payments-widget-sdk	npm	3.5.22	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@picsart/ai-sdk	npm	3.32.2	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@picsart/gen-ai	npm	2.55.11	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@pkgr/core	npm	0.2.8	eslint-config-prettier maintainer phish (CVE-2	https://github.com/advisories/GHSA-f29h-pxvx-f335
+@posthog/agent	npm	1.24.1	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@posthog/ai	npm	7.1.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@posthog/cli	npm	0.5.15	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@posthog/clickhouse	npm	1.7.1	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@posthog/core	npm	1.5.6	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@posthog/hedgehog-mode	npm	0.0.42	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@posthog/icons	npm	0.36.1	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@posthog/nextjs	npm	0.0.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@posthog/nextjs-config	npm	1.5.1	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@posthog/nuxt	npm	1.2.9	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@posthog/plugin-server	npm	1.10.8	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@posthog/rrweb	npm	0.0.31	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@posthog/wizard	npm	1.18.1	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/aether-icons	npm	2.23.2,2.23.3,2.23.4	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/csv-parse	npm	4.0.3,4.0.4,4.0.5	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/final-node-keytar	npm	7.9.1,7.9.2,7.9.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/mcp-ui-client	npm	5.5.1,5.5.2,5.5.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/node-keytar	npm	7.9.4,7.9.5,7.9.6	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/pm-bin-linux-x64	npm	1.24.3,1.24.4,1.24.5	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/pm-bin-macos-arm64	npm	1.24.3,1.24.4,1.24.5	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/pm-bin-macos-x64	npm	1.24.3,1.24.4,1.24.5	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/pm-bin-windows-x64	npm	1.24.3,1.24.4,1.24.5	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/postman-collection-fork	npm	4.3.3,4.3.4,4.3.5	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/postman-mcp-cli	npm	1.0.3,1.0.4,1.0.5	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/postman-mcp-server	npm	2.4.10,2.4.11,2.4.12	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/pretty-ms	npm	6.1.1,6.1.2,6.1.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/secret-scanner-wasm	npm	2.1.2,2.1.3,2.1.4	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@postman/tunnel-agent	npm	0.6.5,0.6.6,0.6.7	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@redhat-cloud-services/chrome	npm	2.3.1,2.3.2,2.3.4	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/compliance-client	npm	4.0.3,4.0.4,4.0.6	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/config-manager-client	npm	5.0.4,5.0.5,5.0.7	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/entitlements-client	npm	4.0.11,4.0.12,4.0.14	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/eslint-config-redhat-cloud-services	npm	3.2.1,3.2.2,3.2.4	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/frontend-components	npm	7.7.2,7.7.3,7.7.5	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/frontend-components-advisor-components	npm	3.8.2,3.8.4,3.8.6	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/frontend-components-config	npm	6.11.3,6.11.4,6.11.6	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/frontend-components-config-utilities	npm	4.11.2,4.11.3,4.11.5	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/frontend-components-notifications	npm	6.9.2,6.9.3,6.9.5	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/frontend-components-remediations	npm	4.9.2,4.9.3,4.9.5	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/frontend-components-testing	npm	1.2.1,1.2.2,1.2.4	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/frontend-components-translations	npm	4.4.1,4.4.2,4.4.4	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/frontend-components-utilities	npm	7.4.1,7.4.2,7.4.4	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/hcc-feo-mcp	npm	0.3.1,0.3.2,0.3.4	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/hcc-kessel-mcp	npm	0.3.1,0.3.2,0.3.4	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/hcc-pf-mcp	npm	0.6.1,0.6.2,0.6.4	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/host-inventory-client	npm	5.0.3,5.0.4,5.0.6	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/insights-client	npm	4.0.4,4.0.5,4.0.7	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/integrations-client	npm	6.0.4,6.0.5,6.0.7	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/javascript-clients-shared	npm	2.0.8,2.0.9,2.0.11	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/notifications-client	npm	6.1.4,6.1.5,6.1.7	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/patch-client	npm	4.0.4,4.0.5,4.0.7	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/quickstarts-client	npm	4.0.11,4.0.12,4.0.14	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/rbac-client	npm	9.0.3,9.0.4,9.0.6	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/remediations-client	npm	4.0.4,4.0.5,4.0.7	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/rule-components	npm	4.7.2,4.7.3,4.7.5	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/sources-client	npm	3.0.10,3.0.11,3.0.13	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/topological-inventory-client	npm	3.0.10,3.0.11,3.0.13	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/tsc-transform-imports	npm	1.2.2,1.2.4,1.2.6	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/types	npm	3.6.1,3.6.2,3.6.4	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@redhat-cloud-services/vulnerabilities-client	npm	2.1.8,2.1.9,2.1.11	Miasma - @redhat-cloud-services compromise (Ju	https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-pa
+@rspack/cli	npm	1.1.7	rspack/vant npm token theft (Dec 20 2024) - XM	https://www.sonatype.com/blog/npm-packages-rspack-vant-compromised-blo
+@rspack/core	npm	1.1.7	rspack/vant npm token theft (Dec 20 2024) - XM	https://www.sonatype.com/blog/npm-packages-rspack-vant-compromised-blo
+@sber-ecom-core/sberpay-widget	npm	99.5.8	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@squawk/flightplan	npm	0.5.6	Mini Shai-Hulud / TeamPCP - May 11 2026 same-d	https://socket.dev/blog/tanstack-npm-packages-compromised-mini-shai-hu
+@squawk/mcp	npm	0.9.5	Mini Shai-Hulud / TeamPCP - May 11 2026 same-d	https://socket.dev/blog/tanstack-npm-packages-compromised-mini-shai-hu
+@squawk/weather	npm	0.5.10	Mini Shai-Hulud / TeamPCP - May 11 2026 same-d	https://socket.dev/blog/tanstack-npm-packages-compromised-mini-shai-hu
+@t-in-one/add_app_middleware_token	npm	5.7.1	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@t-in-one/add_application	npm	5.7.1	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@t-in-one/add_application_service_token	npm	5.7.1	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@t-in-one/add_application_tid	npm	5.7.1	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@t-in-one/application_id_storage_key_token	npm	5.7.1	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@t-in-one/form_product_token	npm	5.7.1	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@t-in-one/get_application_hid	npm	5.7.1	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@t-in-one/only_difference_payload	npm	5.7.1	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@t-in-one/prefill_bundle_data_token	npm	5.7.1	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@t-in-one/prefill_credit_data_token	npm	5.7.1	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@tanstack/arktype-adapter	npm	1.166.12,1.166.15	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/eslint-plugin-router	npm	1.161.9,1.161.12	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/eslint-plugin-start	npm	0.0.4,0.0.7	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/history	npm	1.161.9,1.161.12	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/nitro-v2-vite-plugin	npm	1.154.12,1.154.15	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/react-router	npm	1.169.5,1.169.8	Mini Shai-Hulud / TeamPCP - TanStack GitHub Ac	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/react-router-devtools	npm	1.166.16,1.166.19	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/react-router-ssr-query	npm	1.166.15,1.166.18	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/react-start	npm	1.167.68,1.167.71	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/react-start-client	npm	1.166.51,1.166.54	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/react-start-rsc	npm	0.0.47,0.0.50	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/react-start-server	npm	1.166.55,1.166.58	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/router-cli	npm	1.166.46,1.166.49	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/router-core	npm	1.169.5,1.169.8	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/router-devtools	npm	1.166.16,1.166.19	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/router-devtools-core	npm	1.167.6,1.167.9	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/router-generator	npm	1.166.45,1.166.48	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/router-plugin	npm	1.167.38,1.167.41	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/router-ssr-query-core	npm	1.168.3,1.168.6	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/router-utils	npm	1.161.11,1.161.14	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/router-vite-plugin	npm	1.166.53,1.166.56	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/solid-router	npm	1.169.5,1.169.8	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/solid-router-devtools	npm	1.166.16,1.166.19	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/solid-router-ssr-query	npm	1.166.15,1.166.18	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/solid-start	npm	1.167.65,1.167.68	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/solid-start-client	npm	1.166.50,1.166.53	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/solid-start-server	npm	1.166.54,1.166.57	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/start-client-core	npm	1.168.5,1.168.8	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/start-fn-stubs	npm	1.161.9,1.161.12	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/start-plugin-core	npm	1.169.23,1.169.26	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/start-server-core	npm	1.167.33,1.167.36	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/start-static-server-functions	npm	1.166.44,1.166.47	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/start-storage-context	npm	1.166.38,1.166.41	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/valibot-adapter	npm	1.166.12,1.166.15	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/virtual-file-routes	npm	1.161.10,1.161.13	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/vue-router	npm	1.169.5,1.169.8	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/vue-router-devtools	npm	1.166.16,1.166.19	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/vue-router-ssr-query	npm	1.166.15,1.166.18	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/vue-start	npm	1.167.61,1.167.64	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/vue-start-client	npm	1.166.46,1.166.49	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/vue-start-server	npm	1.166.50,1.166.53	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@tanstack/zod-adapter	npm	1.166.12,1.166.15	Mini Shai-Hulud / TeamPCP - TanStack (May 11 2	https://github.com/advisories/GHSA-g7cv-rxg3-hmpx
+@teale.io/eslint-config	npm	1.8.11,1.8.12	CanisterWorm / TeamPCP npm wave following Triv	https://www.aikido.dev/blog/teampcp-deploys-worm-npm-trivy-compromise
+@travel-autotests/npm-proto	npm	3.5.22	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@uipath/apollo-core	npm	5.9.2	Mini Shai-Hulud / TeamPCP - May 11 2026 same-d	https://www.wiz.io/blog/mini-shai-hulud-strikes-again-tanstack-more-np
+@usebioerhold8733/s-format	npm	2.0.1,2.0.2,2.0.3,2.0.4	GlassWorm (PolinRider / March 2026 npm wave)	https://www.stepsecurity.io/blog/malicious-npm-releases-found-in-popul
+@wb-track/shared-front	npm	3.5.22	Dependency-confusion profiling campaign, actor	https://www.microsoft.com/en-us/security/blog/2026/05/29/33-malicious-
+@workbench-stack/core	npm	3.9.8	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@zapier/ai-actions	npm	0.1.18,0.1.19,0.1.20	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@zapier/ai-actions-react	npm	0.1.12,0.1.13,0.1.14	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@zapier/babel-preset-zapier	npm	6.4.1,6.4.2,6.4.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@zapier/browserslist-config-zapier	npm	1.0.3,1.0.4,1.0.5	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@zapier/eslint-plugin-zapier	npm	11.0.3,11.0.4,11.0.5	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@zapier/mcp-integration	npm	3.0.1,3.0.2,3.0.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@zapier/secret-scrubber	npm	1.1.3,1.1.4,1.1.5	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@zapier/spectral-api-ruleset	npm	1.9.1,1.9.2,1.9.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@zapier/stubtree	npm	0.1.2,0.1.3,0.1.4	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+@zapier/zapier-sdk	npm	0.15.5,0.15.6,0.15.7	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+angulartics2	npm	14.1.1,14.1.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+ansi-regex	npm	6.2.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+ansi-styles	npm	6.2.2	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+axios	npm	0.30.4,1.14.1	axios maintainer account takeover (Mar 31 2026	https://www.stepsecurity.io/blog/axios-compromised-on-npm-malicious-ve
+backslash	npm	0.2.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+base-x-64	npm	0.0.6	Solana/Ethereum typosquat crypto private-key s	https://socket.dev/blog/5-malicious-npm-packages-typosquat-solana-and-
+bs58-basic	npm	6.0.1	Solana/Ethereum typosquat crypto private-key s	https://socket.dev/blog/5-malicious-npm-packages-typosquat-solana-and-
+cacheable	npm	2.5.1	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+cacheable-request	npm	13.0.20	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+chalk	npm	5.6.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+chalk-template	npm	1.1.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+color	npm	5.0.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://semgrep.dev/blog/2025/chalk-debug-and-color-on-npm-compromised
+color-convert	npm	3.1.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+color-name	npm	2.0.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+color-string	npm	2.1.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+create-mastra	npm	1.13.1	Mastra scope takeover / easy-day-js (June 17 2	https://orca.security/resources/blog/mastra-npm-supply-chain-attack/
+debug	npm	4.4.2	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+duckdb	npm	1.3.3	Qix-wave crypto-clipper - duckdb_admin account	https://github.com/duckdb/duckdb-node/security/advisories/GHSA-w62p-hx
+easy-day-js	npm	1.11.21,1.11.22	Mastra scope takeover (June 17 2026) - dayjs t	https://phoenix.security/easy-day-js-mastra-npm-supply-chain-typosquat
+echarts-for-react	npm	3.0.7,3.1.7,3.2.7	Mini Shai-Hulud Wave 5 / TeamPCP - AntV npm ac	https://safedep.io/mini-shai-hulud-strikes-again-314-npm-packages-comp
+ember-browser-services	npm	5.0.2,5.0.3	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+ember-headless-form	npm	1.1.2,1.1.3	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+ember-headless-table	npm	2.1.5,2.1.6	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+ember-url-hash-polyfill	npm	1.0.12,1.0.13	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+ember-velcro	npm	2.2.1,2.2.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+encounter-playground	npm	0.0.2,0.0.3,0.0.4,0.0.5	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+error-ex	npm	1.3.3	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://semgrep.dev/blog/2025/chalk-debug-and-color-on-npm-compromised
+eslint-config-crowdstrike	npm	11.0.2,11.0.3	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+eslint-config-crowdstrike-node	npm	4.0.3,4.0.4	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+eslint-config-prettier	npm	8.10.1,9.1.1,10.1.6,10.1.7	eslint-config-prettier maintainer phish (CVE-2	https://github.com/advisories/GHSA-f29h-pxvx-f335
+eslint-plugin-prettier	npm	4.2.2,4.2.3	eslint-config-prettier maintainer phish (CVE-2	https://github.com/advisories/GHSA-f29h-pxvx-f335
+ethersproject-wallet	npm	5.8.1	Solana/Ethereum typosquat crypto private-key s	https://socket.dev/blog/5-malicious-npm-packages-typosquat-solana-and-
+fetch-page-assets	npm	1.2.9	GlassWorm (May 2026 blockchain dead-drop wave)	https://research.jfrog.com/post/hijacked-npm-vscode-tasks-blockchain/
+file-entry-cache	npm	11.1.6	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+flat-cache	npm	6.1.24	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+got-fetch	npm	5.1.11,5.1.12	eslint-config-prettier maintainer phish (CVE-2	https://github.com/advisories/GHSA-f29h-pxvx-f335
+has-ansi	npm	6.0.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+html-to-gutenberg	npm	4.2.11,4.2.14	GlassWorm (May/July 2026 blockchain dead-drop 	https://research.jfrog.com/post/hijacked-npm-vscode-tasks-blockchain/
+is	npm	3.3.1,5.0.0	Same July 2025 npm phishing wave (Scavenger lo	https://www.stepsecurity.io/blog/supply-chain-security-alert-eslint-co
+is-arrayish	npm	0.3.3	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+jest-canvas-mock	npm	2.5.3,2.6.3,2.7.3	Mini Shai-Hulud Wave 5 / TeamPCP - AntV wave (	https://safedep.io/mini-shai-hulud-strikes-again-314-npm-packages-comp
+jest-date-mock	npm	1.0.11,1.1.11,1.2.11	Mini Shai-Hulud Wave 5 / TeamPCP - AntV wave (	https://safedep.io/mini-shai-hulud-strikes-again-314-npm-packages-comp
+json-rules-engine-simplified	npm	0.2.1,0.2.2,0.2.3,0.2.4	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+keyv	npm	6.0.0	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+koa2-swagger-ui	npm	5.11.1,5.11.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+mastra	npm	1.13.1	Mastra scope takeover / easy-day-js (June 17 2	https://www.stepsecurity.io/blog/mastra-npm-packages-compromised-using
+mbt	npm	1.2.48	Mini Shai-Hulud - SAP CAP wave (April 29 2026)	https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attack
+mcp-knowledge-base	npm	0.0.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+mcp-knowledge-graph	npm	1.2.1	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+monorepo-next	npm	13.0.1,13.0.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+napi-postinstall	npm	0.3.1	eslint-config-prettier maintainer phish (CVE-2	https://github.com/advisories/GHSA-f29h-pxvx-f335
+ng2-file-upload	npm	7.0.2,7.0.3,8.0.1,8.0.2,8.0.3,9.0.1	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+ngx-bootstrap	npm	18.1.4,19.0.3,19.0.4,20.0.3,20.0.4,20.0.5,20.0.6	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+ngx-color	npm	10.0.1,10.0.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+ngx-toastr	npm	19.0.1,19.0.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+ngx-trend	npm	8.0.1	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+ngx-ws	npm	1.1.5,1.1.6	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+node-ipc	npm	9.1.6,9.2.3,12.0.1	node-ipc expired-domain account takeover (May 	https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
+nx	npm	20.9.0,20.10.0,20.11.0,20.12.0,21.5.0,21.6.0,21.7.0,21.8.0	s1ngularity (Nx, Aug 26 2025) - AI-CLI-assiste	https://github.com/nrwl/nx/security/advisories/GHSA-cxm3-wv7p-598c
+plain-crypto-js	npm	4.2.0,4.2.1	axios compromise (Mar 31 2026) - injected phan	https://www.stepsecurity.io/blog/axios-compromised-on-npm-malicious-ve
+posthog-docusaurus	npm	2.0.6	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+posthog-js	npm	1.297.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+posthog-node	npm	4.18.1,5.11.3,5.13.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+posthog-plugin-hello-world	npm	1.0.1	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+posthog-react-native	npm	4.11.1,4.12.5	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+posthog-react-native-session-replay	npm	1.2.2	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+postmark-mcp	npm	1.0.x,1.0.16	Malicious MCP server - silent BCC email exfilt	https://postmarkapp.com/blog/information-regarding-malicious-postmark-
+prebid.js	npm	10.9.1,10.9.2	Qix maintainer phish (Sept 2025 crypto-clipper	https://github.com/advisories/GHSA-jwq7-6j4r-2f92
+proto-tinker-wc	npm	0.1.87	Qix maintainer phish (Sept 8-9 2025 crypto-cli	https://jfrog.com/blog/new-compromised-packages-in-largest-npm-attack-
+rand-user-agent	npm	1.0.110,2.0.83,2.0.84	rand-user-agent RAT (May 5 2025) - stale npm t	https://www.bleepingcomputer.com/news/security/supply-chain-attack-hit
+raydium-bs58	npm	1.9.7	Solana/Ethereum typosquat crypto private-key s	https://socket.dev/blog/5-malicious-npm-packages-typosquat-solana-and-
+react-native-country-select	npm	0.3.91,0.4.1,0.4.2	GlassWorm (PolinRider / March 2026 npm wave)	https://www.stepsecurity.io/blog/malicious-npm-releases-found-in-popul
+react-native-international-phone-number	npm	0.11.8,0.11.100,0.11.1000,0.12.1,0.12.2,0.12.3	GlassWorm (PolinRider / March 2026 npm wave)	https://www.stepsecurity.io/blog/malicious-npm-releases-found-in-popul
+remark-preset-lint-crowdstrike	npm	4.0.1,4.0.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+rxnt-authentication	npm	0.0.3,0.0.4,0.0.5,0.0.6	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+rxnt-healthchecks-nestjs	npm	1.0.2,1.0.3,1.0.4,1.0.5	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+rxnt-kue	npm	1.0.4,1.0.5,1.0.6,1.0.7	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+simple-swizzle	npm	0.2.3	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+size-sensor	npm	1.0.4,1.1.4,1.2.4	Mini Shai-Hulud Wave 5 / TeamPCP - AntV wave (	https://safedep.io/mini-shai-hulud-strikes-again-314-npm-packages-comp
+slice-ansi	npm	7.1.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+strip-ansi	npm	7.1.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+supports-color	npm	10.2.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+supports-hyperlinks	npm	4.1.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+swc-plugin-component-annotate	npm	1.9.1,1.9.2	Shai-Hulud (wave 1, Sept 2025)	https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-co
+synckit	npm	0.11.9	eslint-config-prettier maintainer phish (CVE-2	https://github.com/advisories/GHSA-f29h-pxvx-f335
+tailwind-autoanimation	npm	2.3.6	PolinRider (DPRK / Contagious Interview, 2026)	https://github.com/OpenSourceMalware/PolinRider/blob/main/README.md
+tailwind-mainanimation	npm	0.0.1-security,2.3.3	PolinRider (DPRK / Contagious Interview, 2026)	https://github.com/OpenSourceMalware/PolinRider/blob/main/README.md
+tailwindcss-animate-style	npm	1.2.5	PolinRider (DPRK / Contagious Interview, 2026)	https://github.com/OpenSourceMalware/PolinRider/blob/main/README.md
+tailwindcss-style-animate	npm	1.1.6	PolinRider (DPRK / Contagious Interview, 2026)	https://github.com/OpenSourceMalware/PolinRider/blob/main/README.md
+tailwindcss-style-modify	npm	0.8.3	PolinRider (DPRK / Contagious Interview, 2026)	https://github.com/OpenSourceMalware/PolinRider/blob/main/README.md
+tailwindcss-typography-style	npm	0.8.2	PolinRider (DPRK / Contagious Interview, 2026)	https://github.com/OpenSourceMalware/PolinRider/blob/main/README.md
+timeago.js	npm	4.1.2,4.2.2	Mini Shai-Hulud Wave 5 / TeamPCP - AntV wave (	https://safedep.io/mini-shai-hulud-strikes-again-314-npm-packages-comp
+umadev	npm	1.0.74	Shai-Hulud: Here We Go Again (wave 3, Aug 4 20	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+vant	npm	2.13.3,2.13.4,2.13.5,3.6.13,3.6.14,3.6.15,4.9.11,4.9.12,4.9.13,4.9.14	rspack/vant npm token theft (Dec 20 2024) - XM	https://www.sonatype.com/blog/npm-packages-rspack-vant-compromised-blo
+wrap-ansi	npm	9.0.1	Qix maintainer phish (Sept 8 2025 crypto-clipp	https://www.stepsecurity.io/blog/20-popular-npm-packages-compromised-c
+xrpl	npm	2.14.2,4.2.1,4.2.2,4.2.3,4.2.4	xrpl.js backdoor (April 21-22 2025, CVE-2025-3	https://xrpl.org/blog/2025/vulnerabilitydisclosurereport-bug-apr2025
+zapier-async-storage	npm	1.0.1,1.0.2,1.0.3	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+zapier-platform-cli	npm	18.0.2,18.0.3,18.0.4	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+zapier-platform-core	npm	18.0.2,18.0.3,18.0.4	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+zapier-platform-legacy-scripting-runner	npm	4.0.2,4.0.3,4.0.4	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+zapier-platform-schema	npm	18.0.2,18.0.3,18.0.4	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+zapier-scripts	npm	7.8.3,7.8.4	Shai-Hulud 2.0 / The Second Coming (wave 2, No	https://github.com/wiz-sec-public/wiz-research-iocs/blob/main/reports/
+Colorizator	pypi	1.2.3,2.1.2	colorama/colorizr cross-ecosystem name-confusi	https://checkmarx.com/zero-post/python-pypi-supply-chain-attack-colora
+ai-labs-snippets-sdk	pypi	0.1.0,1.1.0,1.2.0,2.0.0,2.2.0,3.0.0,3.2.0,3.3.0,3.4.0,3.5.0,4.0.0,4.4.0	Fake Alibaba AI Labs SDK - infostealer hidden 	https://www.reversinglabs.com/blog/malicious-attack-method-on-hosted-m
+aliyun-ai-labs-sdk	pypi	1.0.0	Fake Alibaba AI Labs SDK - infostealer hidden 	https://www.reversinglabs.com/blog/malicious-attack-method-on-hosted-m
+aliyun-ai-labs-snippets-sdk	pypi	1.0.0,2.0.0,2.1.0	Fake Alibaba AI Labs SDK - infostealer hidden 	https://www.reversinglabs.com/blog/malicious-attack-method-on-hosted-m
+bitensor	pypi	9.9.4,9.9.5	Bittensor wallet theft typosquat	https://thehackernews.com/2025/08/rubygems-pypi-hit-by-malicious-packa
+bittenso	pypi	9.9.5	Bittensor wallet theft typosquat	https://thehackernews.com/2025/08/rubygems-pypi-hit-by-malicious-packa
+bittenso-cli	pypi	9.9.4	Bittensor wallet theft typosquat	https://thehackernews.com/2025/08/rubygems-pypi-hit-by-malicious-packa
+bramin	pypi	0.0.2,0.0.3,0.0.4	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+cmd2func	pypi	0.2.2,0.2.3	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+coloraiz	pypi	1.0.1,1.0.2,1.0.3	colorama/colorizr cross-ecosystem name-confusi	https://checkmarx.com/zero-post/python-pypi-supply-chain-attack-colora
+coloramapkgs	pypi	0.1.0	colorama/colorizr cross-ecosystem name-confusi	https://checkmarx.com/zero-post/python-pypi-supply-chain-attack-colora
+coloramapkgsdow	pypi	0.1.0	colorama/colorizr cross-ecosystem name-confusi	https://checkmarx.com/zero-post/python-pypi-supply-chain-attack-colora
+coloramapkgsw	pypi	0.1.0	colorama/colorizr cross-ecosystem name-confusi	https://checkmarx.com/zero-post/python-pypi-supply-chain-attack-colora
+coloramashowtemp	pypi	0.1.0	colorama/colorizr cross-ecosystem name-confusi	https://checkmarx.com/zero-post/python-pypi-supply-chain-attack-colora
+coolbox	pypi	0.4.1,0.4.2	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+disgrasya	pypi	7.36.9	WooCommerce/CyberSource automated carding	https://socket.dev/blog/malicious-pypi-package-targets-woocommerce-sto
+dydx-v4-client	pypi	1.1.5post1,1.1.5.post1	dYdX maintainer/publishing-infrastructure comp	https://socket.dev/blog/malicious-dydx-packages-published-to-npm-and-p
+dynamo-release	pypi	1.5.4	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+eth-security-auditor	pypi	0.1.0	TrapDoor	https://socket.dev/blog/trapdoor-crypto-stealer-npm-pypi-crates
+executor-engine	pypi	0.3.4,0.3.5	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+executor-http	pypi	0.1.3,0.1.4	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+funcdesc	pypi	0.2.2,0.2.3	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+guardrails-ai	pypi	0.10.1	Mini Shai-Hulud (2026-05-11 npm+PyPI crossover	https://github.com/advisories/GHSA-xmpw-2vmm-p4p6
+herewalletbot	pypi	1.0	"Bad Seeds" seed-phrase harvesters	https://socket.dev/blog/malicious-npm-and-pypi-packages-steal-wallet-c
+lightning	pypi	2.6.2,2.6.3	Mini Shai-Hulud (PyTorch Lightning backdoor wa	https://socket.dev/blog/lightning-pypi-package-compromised
+litellm	pypi	1.82.7,1.82.8	TeamPCP / Miasma (Mini Shai-Hulud lineage)	https://securitylabs.datadoghq.com/articles/litellm-compromised-pypi-t
+magique	pypi	0.6.8,0.6.9	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+magique-ai	pypi	0.4.4,0.4.5	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+mistralai	pypi	2.4.6	Mini Shai-Hulud (2026-05-11 npm+PyPI crossover	https://www.ox.security/blog/shai-hulud-here-we-go-again-170-packages-
+mrbios	pypi	0.1.1,0.1.2	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+napari-ufish	pypi	0.0.2,0.0.3	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+nucbox	pypi	0.1.2,0.1.3	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+num2words	pypi	0.5.15,0.5.16	PyPI phishing campaign (account takeover via f	https://blog.pypi.org/posts/2025-07-31-incident-report-phishing-attack
+okite	pypi	0.0.7,0.0.8	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+pantheon-agents	pypi	0.6.1,0.6.2	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+pantheon-toolsets	pypi	0.5.5,0.5.6	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+paysafe-api	pypi	1.0.0	Paysafe/Skrill/Neteller payment-SDK typosquat 	https://socket.dev/blog/npm-pypi-campaign-typosquats-popular-secure-pa
+paysafe-kyc	pypi	1.0.0	Paysafe/Skrill/Neteller payment-SDK typosquat 	https://socket.dev/blog/npm-pypi-campaign-typosquats-popular-secure-pa
+paysafe-payments	pypi	1.0.0	Paysafe/Skrill/Neteller payment-SDK typosquat 	https://socket.dev/blog/npm-pypi-campaign-typosquats-popular-secure-pa
+paysafe-sdk	pypi	1.0.0	Paysafe/Skrill/Neteller payment-SDK typosquat 	https://socket.dev/blog/npm-pypi-campaign-typosquats-popular-secure-pa
+qbittensor	pypi	9.9.4	Bittensor wallet theft typosquat	https://thehackernews.com/2025/08/rubygems-pypi-hit-by-malicious-packa
+readmecolorama	pypi	0.1.0	colorama/colorizr cross-ecosystem name-confusi	https://checkmarx.com/zero-post/python-pypi-supply-chain-attack-colora
+secmeasure	pypi	0.1.0,0.1.1,0.1.2	SilentSync RAT	https://www.zscaler.com/blogs/security-research/malicious-pypi-package
+set-utils	pypi	1.1.0	Ethereum private-key stealer (typosquat of pyt	https://socket.dev/blog/new-pypi-malware-exfiltrates-ethereum-private-
+sisaws	pypi	2.1.6	SilentSync RAT (typosquat of `sisa`)	https://www.zscaler.com/blogs/security-research/malicious-pypi-package
+solana-token	pypi	0.0.1,0.0.2	Solana developer source-code / secrets stealer	https://www.reversinglabs.com/blog/same-name-different-hack-pypi-packa
+soopsocks	pypi	0.2.5,0.2.6	SOCKS5 backdoor proxy / recon exfil to Discord	https://thehackernews.com/2025/10/alert-malicious-pypi-package-soopsoc
+spateo-release	pypi	1.1.2	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+synago	pypi	0.1.1,0.1.2	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+telnyx	pypi	4.87.1,4.87.2	TeamPCP / Miasma (Mini Shai-Hulud lineage)	https://securitylabs.datadoghq.com/articles/litellm-compromised-pypi-t
+ufish	pypi	0.1.2,0.1.3	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+uprobe	pypi	0.1.3,0.1.4	Shai-Hulud / Mini Shai-Hulud - "Hades" PyPI wa	https://socket.dev/blog/shai-hulud-descends-to-hades-miasma-pypi-wave
+web3x	pypi	0.3	"Bad Seeds" seed-phrase harvesters	https://socket.dev/blog/malicious-npm-and-pypi-packages-steal-wallet-c

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # glassworm/check-extensions.sh — audit installed editor extensions against the
-# known GlassWorm-compromised list (124 IDs, waves 1–5 + this incident).
+# canonical malicious-extension blocklist.
 #
 # Checks VS Code, VS Code Insiders, Cursor, Windsurf, VSCodium and any OpenVSX
 # client that uses the standard ~/.<editor>/extensions layout. Also greps each
@@ -23,8 +23,6 @@ MARKER='lzcdrtfxyqiplpd'
 DEEP=0
 [ "${1:-}" = "--deep" ] && DEEP=1
 
-[ -f "$LIST" ] || { echo "missing extension list: $LIST" >&2; exit 1; }
-
 if [ -t 1 ]; then
   RED=$'\033[31m'; GRN=$'\033[32m'; YEL=$'\033[33m'; DIM=$'\033[2m'; BLD=$'\033[1m'; RST=$'\033[0m'
 else RED=""; GRN=""; YEL=""; DIM=""; BLD=""; RST=""; fi
@@ -39,11 +37,46 @@ EXT_DIRS=(
   "$HOME/.openvsx/extensions"
 )
 
-# lowercase id -> "wave<TAB>source"
+# lowercase id -> "campaign<TAB>source". Refuse to scan with an empty,
+# malformed, or duplicate blocklist: a broken list must never yield false-clean.
 BAD="$(mktemp)"; trap 'rm -f "$BAD"' EXIT
-grep -v '^#' "$LIST" | grep -v '^[[:space:]]*$' \
-  | awk -F'\t' '{print tolower($1)"\t"$2"\t"$3}' > "$BAD"
 
+load_list() { # file label
+  local file="$1" label="$2"
+  [ -f "$file" ] || { echo "missing $label extension list: $file" >&2; return 1; }
+  awk -F'\t' -v file="$file" '
+    /^#/ || /^[[:space:]]*$/ { next }
+    NF != 3 || $1 == "" || $2 == "" || $3 == "" {
+      printf "%s:%d: expected 3 non-empty tab-separated fields\n", file, NR > "/dev/stderr"
+      bad=1; next
+    }
+    $1 != tolower($1) || $1 !~ /^[a-z0-9][a-z0-9._-]*\.[a-z0-9][a-z0-9._-]*$/ {
+      printf "%s:%d: invalid or non-lowercase extension id: %s\n", file, NR, $1 > "/dev/stderr"
+      bad=1; next
+    }
+    { print $1 "\t" $2 "\t" $3; count++ }
+    END {
+      if (count == 0) {
+        printf "%s: extension list has no data rows\n", file > "/dev/stderr"
+        bad=1
+      }
+      exit bad
+    }
+  ' "$file" >> "$BAD"
+}
+
+load_list "$LIST" "canonical" || exit 1
+BLOCKLIST_COUNT=$(wc -l < "$BAD" | tr -d ' ')
+OTHER_COUNT=$(awk -F'\t' '$2 ~ /^evil-twin/ || $2 == "roblox-dropper-heyheyhey" { n++ } END { print n+0 }' "$BAD")
+INCIDENT_COUNT=$(awk -F'\t' '$2 ~ /^incident-local/ { n++ } END { print n+0 }' "$BAD")
+GLASSWORM_COUNT=$((BLOCKLIST_COUNT - OTHER_COUNT - INCIDENT_COUNT))
+
+DUPLICATES=$(cut -f1 "$BAD" | sort | uniq -d)
+if [ -n "$DUPLICATES" ]; then
+  echo "duplicate extension ids in canonical blocklist:" >&2
+  printf '%s\n' "$DUPLICATES" >&2
+  exit 1
+fi
 TOTAL_INSTALLED=0
 HITS=0
 DEEP_HITS=0
@@ -114,8 +147,8 @@ deep_scan_ext() {
   done < <(grep -rIl "${INC[@]}" -e '0xE0100' -e '0xe0100' -e '0xFE00' -e '0xfe00' "$extdir" 2>/dev/null)
 }
 
-echo "${BLD}GlassWorm extension audit${RST}"
-echo "Known-bad list: $(wc -l < "$BAD" | tr -d ' ') extension IDs"
+echo "${BLD}Extension supply-chain audit${RST}"
+echo "Blocklist: $GLASSWORM_COUNT GlassWorm-linked + $OTHER_COUNT other malicious + $INCIDENT_COUNT incident-local = $BLOCKLIST_COUNT extension IDs"
 echo
 
 for d in "${EXT_DIRS[@]}"; do
@@ -133,7 +166,7 @@ for d in "${EXT_DIRS[@]}"; do
 
     if match="$(awk -F'\t' -v k="$id_lc" '$1==k {print $2"\t"$3; exit}' "$BAD")"; [ -n "$match" ]; then
       wave="${match%%$'\t'*}"; src="${match#*$'\t'}"
-      printf "  ${RED}%-11s${RST} %s  ${YEL}[%s · %s]${RST}\n" "COMPROMISED" "$base" "$wave" "$src"
+      printf "  ${RED}%-11s${RST} %s  ${YEL}[%s · %s]${RST}\n" "BLOCKLISTED" "$base" "$wave" "$src"
       printf "              ${DIM}uninstall: code --uninstall-extension %s${RST}\n" "$id"
       HITS=$((HITS+1))
     fi
@@ -150,12 +183,14 @@ for d in "${EXT_DIRS[@]}"; do
 done
 
 echo "${BLD}=== Summary ===${RST}"
-echo "Extensions inspected: $TOTAL_INSTALLED   Known-bad matches: $HITS   Payload-pattern hits: $DEEP_HITS"
+echo "Extensions inspected: $TOTAL_INSTALLED   Blocklist matches: $HITS   Payload-pattern hits: $DEEP_HITS"
 if [ "$HITS" -eq 0 ] && [ "$DEEP_HITS" -eq 0 ]; then
-  echo "${GRN}${BLD}No compromised extensions found.${RST}"
+  echo "${GRN}${BLD}No blocklisted extensions found.${RST}"
   [ "$DEEP" = 0 ] && echo "${DIM}(run with --deep to also scan extension code for unlisted variants)${RST}"
 else
-  echo "${RED}${BLD}Remove the extensions above, then rotate every credential on this machine.${RST}"
+  echo "${RED}${BLD}Disable/remove the blocklisted extensions pending registry/version review.${RST}"
+  echo "Treat OpenVSX/unknown-origin or payload-pattern hits as host compromise; rotate exposed credentials."
+  echo "Some same-ID Microsoft Marketplace releases were clean; preserve origin/version evidence before removal."
   echo "Disable extension auto-update until the all-clear:"
   echo "  \"extensions.autoUpdate\": false, \"extensions.autoCheckUpdates\": false"
 fi

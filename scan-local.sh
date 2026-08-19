@@ -24,11 +24,17 @@
 # Exit 1 when findings exist (CI-friendly).
 #
 # Usage:
-#   ./scan-local.sh [--tsv FILE] [--include-remote-refs] [ROOT ...]
+#   ./scan-local.sh [--tsv FILE] [--include-remote-refs] [--deep] [ROOT ...]
 #
 # Options:
 #   --tsv FILE              also write findings as TSV to FILE
 #   --include-remote-refs   also scan cached remote-tracking refs (still offline)
+#   --deep                  ALSO scan dependencies (package-lock/yarn/requirements/
+#                           node_modules/.venv) against the known-malicious package
+#                           database. Offline.
+#
+# Exposed credentials are NOT scanned here — that is a separate concern with a
+# separate tool: ./scan-credentials.sh
 #
 set -uo pipefail
 export LC_ALL=C LANG=C
@@ -90,10 +96,12 @@ HIST_PATHSPECS=(
 TSV=""
 ROOTS=()
 INCLUDE_REMOTE_REFS=0    # default: pure local — only refs/heads + refs/tags
+DEEP=0                   # --deep: also scan dependencies against the malicious-package DB
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --tsv) TSV="${2:?--tsv needs a file}"; shift 2 ;;
     --include-remote-refs) INCLUDE_REMOTE_REFS=1; shift ;;
+    --deep) DEEP=1; shift ;;
     -h|--help)
       sed -n '2,24p' "$0"; exit 0 ;;
     -*) echo "unknown option: $1" >&2; exit 2 ;;
@@ -291,6 +299,11 @@ scan_repo() { # gitdir worktree(optional, empty for bare)
 
   # ---- 3. working tree (tracked + untracked) ------------------------------
   [ -n "$wt" ] && [ -d "$wt" ] && scan_files_on_disk "$wt" "$label" "worktree"
+
+  # ---- 4. --deep: known-malicious dependencies -----------------------------
+  if [ "$DEEP" = 1 ] && [ -n "$wt" ] && [ -d "$wt" ]; then
+    scan_dependencies "$wt" "$label"
+  fi
 }
 
 # Scan loose files on disk for worm artifacts. Used for a repo's working tree
@@ -345,6 +358,121 @@ scan_files_on_disk() { # dir label where
              "$dir" 2>/dev/null | sort -u)
 }
 
+
+# ---------------------------------------------------------------------------
+# --deep : dependency scanning against the known-malicious package database
+# ---------------------------------------------------------------------------
+HERE_DIR="$(cd "$(dirname "$0")" && pwd)"
+PKG_DB="$HERE_DIR/data/malicious-packages.tsv"
+
+# Is VERSION covered by SPEC?  spec: "*" | "1.2.3,1.2.4" | "1.3.0-1.3.4"
+version_matches() { # spec version
+  local spec="$1" v="$2" item lo hi
+  [ "$spec" = "*" ] && return 0
+  [ -z "$v" ] && return 1
+  case "$spec" in
+    *-*)
+      lo="${spec%%-*}"; hi="${spec##*-}"
+      [ "$(printf '%s\n%s\n' "$lo" "$v" | sort -V | head -1)" = "$lo" ] &&
+      [ "$(printf '%s\n%s\n' "$v" "$hi" | sort -V | head -1)" = "$v" ] && return 0
+      ;;
+  esac
+  IFS=',' read -ra _vs <<< "$spec"
+  for item in "${_vs[@]}"; do [ "$item" = "$v" ] && return 0; done
+  return 1
+}
+
+# Emit "name<TAB>version" for every dependency we can see under a directory.
+enumerate_deps() { # dir
+  local d="$1" f
+  # npm lockfile v2/v3 (packages{} keyed by node_modules/<name>) and v1 (dependencies{})
+  while IFS= read -r f; do
+    python3 - "$f" <<'PYX' 2>/dev/null
+import json,sys
+try: d=json.load(open(sys.argv[1]))
+except Exception: sys.exit(0)
+def emit(n,v):
+    if n and v: print(f"{n}\t{v}")
+for k,v in (d.get('packages') or {}).items():
+    if not k: continue
+    name=v.get('name') or k.split('node_modules/')[-1]
+    emit(name, v.get('version'))
+def walk(deps):
+    for n,v in (deps or {}).items():
+        if isinstance(v,dict):
+            emit(n, v.get('version')); walk(v.get('dependencies'))
+walk(d.get('dependencies'))
+PYX
+  done < <(find "$d" -name package-lock.json -not -path '*/node_modules/*' 2>/dev/null)
+
+  # installed node_modules (authoritative: what is actually on disk)
+  while IFS= read -r f; do
+    python3 - "$f" <<'PYX' 2>/dev/null
+import json,sys
+try: d=json.load(open(sys.argv[1]))
+except Exception: sys.exit(0)
+if d.get('name') and d.get('version'): print(f"{d['name']}\t{d['version']}")
+PYX
+  done < <(find "$d" -path '*/node_modules/*' -name package.json -maxdepth 6 2>/dev/null | head -4000)
+
+  # yarn.lock  ("pkg@range:" then "  version \"1.2.3\"")
+  while IFS= read -r f; do
+    awk '/^"?[^ #].*:$/{name=$0; gsub(/^"/,"",name); sub(/@[^@]*:$/,"",name); next}
+         /^  version /{gsub(/"/,"",$2); if(name!="") print name"\t"$2}' "$f" 2>/dev/null
+  done < <(find "$d" -name yarn.lock -not -path '*/node_modules/*' 2>/dev/null)
+
+  # requirements.txt  (name==version)
+  while IFS= read -r f; do
+    grep -E '^[A-Za-z0-9._-]+[[:space:]]*==[[:space:]]*[0-9]' "$f" 2>/dev/null |
+      sed -E 's/[[:space:]]//g; s/==/\t/; s/[;#].*$//'
+  done < <(find "$d" -name requirements*.txt -not -path '*/node_modules/*' 2>/dev/null)
+
+  # installed python packages in .venv / venv
+  while IFS= read -r f; do
+    n=$(sed -n 's/^Name: //p' "$f" 2>/dev/null | head -1)
+    v=$(sed -n 's/^Version: //p' "$f" 2>/dev/null | head -1)
+    [ -n "$n" ] && [ -n "$v" ] && printf '%s\t%s\n' "$n" "$v"
+  done < <(find "$d" \( -name .venv -o -name venv \) -prune -exec find {} -name METADATA -path '*.dist-info*' \; 2>/dev/null | head -4000)
+}
+
+scan_dependencies() { # dir label
+  local dir="$1" label="$2"
+  [ -f "$PKG_DB" ] || return 0
+  local deps; deps="$(mktemp)"
+  enumerate_deps "$dir" | sort -u > "$deps"
+  local total; total=$(wc -l < "$deps" | tr -d ' ')
+  [ "${total:-0}" -eq 0 ] && { rm -f "$deps"; return 0; }
+  printf "${DIM}      %s dependencies enumerated${RST}\n" "$total" >&2
+
+  # Single pass: load the DB into an awk hash, then stream the dependency list
+  # once. The previous nested-loop version was O(db x deps) in bash and took
+  # minutes per repo; this is effectively linear.
+  while IFS=$'\t' read -r pname pver pcamp; do
+    [ -n "$pname" ] && report "$label" "dependency" "$pname@$pver" "malicious-package($pcamp)"
+  done < <(awk -F'\t' '
+    function vnum(v,  a,n,i,r) { n=split(v,a,"."); r=0
+      for(i=1;i<=3;i++){ x=(i<=n)?a[i]+0:0; r=r*100000+x } return r }
+    NR==FNR {
+      if ($0 ~ /^#/ || NF<4) next
+      spec[$1]=$3; camp[$1]=$4; next
+    }
+    {
+      name=$1; ver=$2
+      if (!(name in spec)) next
+      s=spec[name]
+      if (s=="*") { print name "\t" ver "\t" camp[name]; next }
+      if (s ~ /^[0-9][0-9.]*-[0-9]/) {          # inclusive range lo-hi
+        i=index(s,"-"); lo=substr(s,1,i-1); hi=substr(s,i+1)
+        if (vnum(ver)>=vnum(lo) && vnum(ver)<=vnum(hi)) print name "\t" ver "\t" camp[name]
+        next
+      }
+      n=split(s,vs,",")                          # exact list
+      for(i=1;i<=n;i++){ gsub(/^[ \t]+|[ \t]+$/,"",vs[i]); if (vs[i]==ver) { print name "\t" ver "\t" camp[name]; break } }
+    }' "$PKG_DB" "$deps")
+  rm -f "$deps"
+}
+
+
 echo "${BLD}GlassWorm local scan${RST}"
 echo "Roots: ${ROOTS[*]}"
 echo "Started: $(date)"
@@ -380,6 +508,9 @@ for r in "${ROOTS[@]}"; do
     FILES_ONLY_ROOTS=$((FILES_ONLY_ROOTS+1))
     printf "${DIM}[files] %s ${RST}${YEL}(no git repo here — scanning files only)${RST}\n" "${r/#$HOME/\~}" >&2
     scan_files_on_disk "$r" "${r/#$HOME/\~}" "files"
+    # --deep applies to non-repo folders too: an extracted archive or a deploy
+    # directory can carry a malicious lockfile / node_modules with no git at all.
+    [ "$DEEP" = 1 ] && scan_dependencies "$r" "${r/#$HOME/\~}"
   fi
 done
 

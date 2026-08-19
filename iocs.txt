@@ -1,0 +1,221 @@
+# GlassWorm IOCs — this incident (confirmed locally) + public reporting
+# Updated: 2026-08-18
+
+## Files / paths (any directory depth)
+public/fonts/fa-solid-400.woff2    # THE PAYLOAD: obfuscated JS disguised as a font; ASCII text, not binary.
+                                   # md5 a1f4ab46009ed505da50d23dbec4802c (5533 bytes, this incident's sample)
+temp_auto_push.bat                 # push helper (self-propagation)
+temp_interactive_push.bat          # push helper (self-propagation)
+branch_structure.json              # worm bookkeeping
+.vscode/spellright.dict            # dropped by worm kit
+.vscode/tasks.json                 # rewritten: runOn=folderOpen, exec "node ./public/fonts/fa-solid-400.woff2"
+                                   # md5 4aa4d078673eb50fe9c076f8a44acb9a (799 bytes, this incident's sample)
+config.bat                         # author-spoofer: rolls clock to prior commit date, sets prior author's
+                                   # user.name/email, commit --amend --no-verify, restores clock, push -uf
+.gitignore                         # poisoned: hides temp_*push.bat, branch_structure.json, and itself
+.vscode/settings.json              # planted: "task.allowAutomaticTasks": true  <- bypasses the
+                                   # "allow automatic tasks?" prompt so tasks.json fires silently.
+                                   # Seen paired with "terminal.integrated.hideOnStartup": "always"
+                                   # and "debug.openDebug": "neverOpen" to hide the execution.
+                                   # Some variants embed the folderOpen task in settings.json itself.
+                                   # CONFIRMED in 44 local westackai repos, 2026-08-17.
+public/fonts/fa-brands-400.*       # camouflage kit (only worm-planted when fa-solid-400.woff2 present)
+public/fonts/fa-regular-400.*      # camouflage kit
+public/fonts/fa-solid-900.*        # camouflage kit
+public/fonts/README.md             # camouflage kit
+
+## Strings / patterns
+lzcdrtfxyqiplpd                    # ForceMemo wave marker
+"fa-solid-400"                     # invalid FontAwesome weight — real kits ship 400-regular / 900-solid
+runOn": "folderOpen" + node ...woff2   # autorun trigger in tasks.json
+U+FE00–U+FE0F, U+E0100–U+E01EF     # invisible-Unicode variation selectors used to hide payload code
+codePointAt + 0xFE00/0xE0100       # the in-source Unicode decoder
+
+## VS Code / OpenVSX extensions
+# Canonical ID-level list (run ./check-extensions.sh to audit installed copies):
+data/compromised-extensions.tsv         # 322 public GlassWorm + 95 other malicious + 1 incident-local
+myml.vscode-markdown-plantuml-preview   # incident-local recommendation planted in .vscode/extensions.json
+
+## Network (block at firewall/EDR; search proxy logs)
+217.69.3.218                       # C2 (from earlier public reporting)
+140.82.52.31                       # C2 (from earlier public reporting)
+
+## Blockchain C2 — CONFIRMED by deobfuscating the live sample 2026-08-17
+# Sample: courtpass/kiosk-app@main public/fonts/fa-solid-400.woff2
+#   31300 bytes, ASCII, md5 0178bfe6cf7e64bcf40e62cc70342a87
+#   obfuscator.io-style: rotated string array + 10-char split literals,
+#   padded with ~350 leading spaces so it looks blank in an editor.
+# This variant reads its C2 config from ETHEREUM (the original GlassWorm used Solana):
+# it pulls the tx list of an attacker wallet and decodes the next-stage host from it.
+https://eth.blockscout.com/api?module=account&action=txlist&address=0x…&startblock=0&endblock=99999999&page=1&offset=20&sort=desc&filterby=from
+eth.blockscout.com                 # blockchain explorer used as dead-drop reader
+eth.drpc.org                       # Ethereum JSON-RPC fallback
+1rpc.io/eth                        # Ethereum JSON-RPC fallback
+ethereum-rpc.publicnode.com        # Ethereum JSON-RPC fallback
+eth-mainnet.public.blastapi.io     # Ethereum JSON-RPC fallback
+# RPC methods used: eth_blockNumber, eth_getBlockByNumber, eth_getTransactionCount
+# Attacker wallet address (partial — reassembled from 4 obfuscated 10-char fragments,
+# 38 of 40 hex chars recovered; treat the prefix as the indicator):
+0xa322E5f3D311D3080e9aDC2490Ef6f0121063e…
+#   fragments: a322E5f3 | D311D3080e | 9aDC2490Ef | 6f0121063e
+# Second-stage C2 paths, contacted on port 443 at the host decoded from the chain:
+:443/0x/cl
+:443/0x/ls
+# Execution primitives present in the payload: child_process, spawn(node, '-e', …), eval
+# UA it spoofs: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 … Chrome/13x
+# Custom header: x-payload-…   Globals it sets: global['_V…'], _t_u, _t_s, _H2
+
+## Behavior on infected machine
+- Hidden VNC server + SOCKS proxy persistence (check ~/Library/LaunchAgents, /Library/LaunchDaemons on macOS;
+  Run keys / scheduled tasks on Windows)
+- Steals GitHub/npm/OpenVSX credentials; targets ~49 crypto-wallet browser extensions
+- Push ACTOR = stolen credential's account; commit AUTHOR spoofed to a teammate (via config.bat)
+
+## Suspicious commit titles seen in this incident
+"Shatter glass", "Remove worm", "Remove confirmed malicious payloads"  # remediation attempts (not malicious,
+                                                                       # but mark infected repos)
+
+
+# =====================================================================
+# PUBLIC REPORTING (research sweep updated 2026-08-18). Sources: Koi Security,
+# Socket.dev, Yeeth Security, JFrog, StepSecurity/BleepingComputer,
+# OpenSourceMalware/PolinRider, Aikido.
+# =====================================================================
+
+## Additional C2 IPs — block all of these at egress
+217.69.3.218        # primary C2; /get_zombi_payload/, /get_arhive_npm/
+140.82.52.31        # exfil :80/wall  (NOTE: 140.82.x.x looks like GitHub — do not confuse)
+199.247.10.166      # C2
+199.247.13.106      # exfil :80/wall
+194.38.11.3         # C2
+166.88.134.62       # JFrog fake-woff2 wave
+198.105.127.210     # JFrog fake-woff2 wave
+23.27.202.27        # JFrog fake-woff2 wave
+45.32.151.157       # ForceMemo wave
+45.32.150.97        # ForceMemo wave
+217.69.11.57        # ForceMemo wave
+217.69.11.99        # ForceMemo wave
+217.69.0.159        # ForceMemo wave
+45.76.44.240        # ForceMemo wave
+
+## Blockchain dead-drops (public reporting) — our sample uses ETHEREUM (see above)
+28PKnu7RzizxBzFPoLp69HLXp9bJL3JFtT2s5QzHsEA2   # Solana C2 (wave 1)
+BjVeAjPrSKFiingBn4vZvghsGj9KCE8AJVtbc9S8o8SC   # Solana C2 (ForceMemo)
+G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t   # Solana funding (ForceMemo)
+6YGcuyFRJKZtcaYCCFba9fScNUvPkGXodXE1mJiSzqDJ   # Solana C2 (secondary)
+TMfKQEd7TJJa5xNZJZ2Lep838vrzrs7mAP             # TRON dead-drop (JFrog)
+0xbe037400670fbf1c32364f762975908dc43eeb38759263e7dfcdabc76380811e  # Aptos (JFrog)
+https://calendar.app.google/M2ZCvM8ULL56PD1d6  # Google Calendar backup C2
+uhjdclolkdn@gmail.com                          # calendar organizer
+# Abused RPC hosts: api.trongrid.io, fullnode.mainnet.aptoslabs.com,
+#   bsc-dataseed.binance.org, bsc-rpc.publicnode.com  (+ our Ethereum set above)
+
+## May/June 2026 GlassWorm indicators (Yeeth Security)
+# https://yeethsecurity.com/blog/2026-05-25-Glassworm-Solana
+dodod.lat                                    # May-wave C2
+jhggnrfnst.com                               # May-wave C2
+6ExrZayPZzMMSnszc42cH81DpuKT8FhCX9H6Sesn6rpz   # Solana wallet/C2
+7GyHfpK8uYY9ovMuS7N2LogbEpDGePBvMkNh5AsyS9ur   # Solana wallet/C2
+fc714780730a85aff02cec5370630dd275d5e09a61d912eca06ff358e47ff277  # Backup.exe SHA-256
+# https://yeethsecurity.com/blog/2026-06-16-Glassworm-WASM
+2417df8fdc0f94e22a850892e3f6f8bc7122a079073b5ea725b3b0f2076357d8  # GlassWorm.WASM SHA-256
+
+## Host persistence / RAT footprint to hunt
+~/init.json                 # ForceMemo persistence (2-day recheck)
+i.js                        # extracted payload in cloned projects
+os.node                     # Windows native implant (Rust DLL)
+darwin.node                 # macOS native implant
+# unexpected ~/node-v22* install; `node -e global…` processes; HVNC + SOCKS activity
+# Windows: HKCU\ and HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+
+## Additional IOCs from afine-com/glassworm-hunter data/ioc.json (snapshot 2026-08-17)
+# Sources: Koi Security, Socket.dev, StepSecurity, Aikido Security.
+# The canonical list contains 322 publicly reported GlassWorm-linked IDs,
+# 95 separately attributed malicious IDs, and one incident-local review ID.
+
+# C2 IPs not listed above (block these too)
+104.238.191.54   107.191.62.170   108.61.208.161   217.69.13.229
+217.69.3.152     45.150.34.158    45.32.150.251    45.76.45.151
+70.34.242.255    217.69.11.60
+
+# Solana C2 wallet not listed above
+DSRUBTziADDHSik7WQvSMjvwCHFsbsThrbbjWMoJPUiW
+
+# Attacker accounts / publishers — search your org for any of these as
+# collaborators, forks, or extension publishers
+chiara585         # GitHub account
+francesca898      # GitHub account
+oorzc             # OpenVSX publisher
+laura6909         # OpenVSX publisher
+martina0094       # OpenVSX publisher
+uhjdclolkdn@gmail.com                      # Google Calendar C2 organizer
+/Users/davidioasd/Downloads/rust_implant/  # build path leaked in the implant
+
+# Crypto constants (for YARA / static hunting)
+xor_key = 134
+aes_key = wDO6YyTm6DL0T0zJ0SXhUql5Mo0pdlSz
+
+# Poisoned npm packages (pin/audit your lockfiles)
+@aifabrix/miso-client 4.7.2
+@iflow-mcp/watercrawl-watercrawl-mcp 1.3.0-1.3.4
+react-native-country-select 0.3.91
+react-native-international-phone-number 0.11.8
+
+## DETECTION NOTE — invisible Unicode is NOT how this incident's payload hides
+# Public GlassWorm coverage centres on invisible-Unicode variation selectors.
+# The live sample pulled from courtpass/kiosk-app on 2026-08-17 contains ZERO
+# variation selectors. It is plain obfuscator.io output padded with ~350 leading
+# spaces so it renders blank. So a Unicode-only scanner will not flag it — this
+# toolkit detects it by file identity + `file` type (a "font" that is ASCII).
+#
+# When you DO hunt invisible Unicode, require a RUN of 8+ consecutive selectors.
+# One selector encodes one byte, so real payloads run to hundreds, while a lone
+# selector is an emoji modifier or BOM. Measured locally: python's
+# unicode/category/Mn.js has 256 selectors but longest run 1; Volar peaks at 3.
+# Also: BSD grep on macOS cannot match these byte ranges at all — use perl.
+
+## Selected early compromised extension/version examples
+# This is not the exhaustive extension list. Audit every developer machine with
+# ./check-extensions.sh; the canonical ID-level TSVs above include later waves,
+# transitive loaders, and high-confidence sleeper clusters.
+codejoy.codejoy-vscode-extension 1.8.3 / 1.8.4
+cline-ai-main.cline-ai-agent 3.1.3
+l-igh-t.vscode-theme-seti-folder 1.2.3
+kleinesfilmroellchen.serenity-dsl-syntaxhighlight 0.3.2
+JScearcy.rust-doc-viewer 4.2.1
+SIRILMP.dark-theme-sm 3.11.4
+CodeInKlingon.git-worktree-menu 1.0.9 / 1.0.91
+ginfuru.better-nunjucks 0.3.2
+ellacrity.recoil 0.7.4
+grrrck.positron-plus-1-e 0.0.71
+jeronimoekerdt.color-picker-universal 2.8.91
+srcery-colors.srcery-colors 0.3.9
+sissel.shopify-liquid 4.0.1
+TretinV3.forts-api-extention 0.3.1
+ai-driven-dev.ai-driven-dev / adhamu.history-in-sublime-merge / yasuyuky.transient-emacs   # wave 2
+myml.vscode-markdown-plantuml-preview          # incident-local
+# Poisoned npm: react-native-international-phone-number 0.11.8,
+#   react-native-country-select 0.3.91, html-to-gutenberg 4.2.11, fetch-page-assets 1.2.9
+
+## Public tooling worth adopting
+https://github.com/afine-com/glassworm-hunter          # pipx install glassworm-hunter
+https://github.com/knostic/open-tools/tree/main/glassworm_yara
+https://github.com/lirantal/anti-trojan-source         # invisible-Unicode CI/pre-commit
+https://github.com/OpenSourceMalware/PolinRider        # polinrider-scanner.sh + YARA
+
+## Hunting patterns
+0xFE00&&w<=0xFE0F?w-0xFE00:w>=0xE0100&&w<=0xE01EF    # the decoder, verbatim
+[\x{FE00}-\x{FE0F}] [\x{E0100}-\x{E01EF}]            # invisible Unicode
+[\x{202A}-\x{202E}\x{2066}-\x{2069}]                 # bidi / Trojan Source
+git commit --amend -m "%LAST_COMMIT_TEXT%" --no-verify ; git push -uf … --no-verify
+"task.allowAutomaticTasks": true   # planted in .vscode/settings.json to bypass the prompt
+
+## IMPORTANT — 7-DAY EVIDENCE WINDOW
+# GitHub audit-log *Git events* (git.push) are retained only 7 days and never appear
+# in the web UI. Our last malicious push was 2026-08-15 → evidence expires ~2026-08-22.
+# Pull and archive NOW (needs a token with read:audit_log):
+#   gh api "orgs/ORG/audit-log?include=git&phrase=action:git.push&per_page=100" --paginate
+# Trace a known stolen token without putting it in shell history:
+#   bash -c 'read -rsp "Token: " gw_token; echo; printf %s "$gw_token" | openssl dgst -sha256 -binary | base64; unset gw_token'
+#   Then search hashed_token:"<HASH>".
+# Enable Org Audit log > Settings > "Disclose actor IP addresses" (not retroactive).
