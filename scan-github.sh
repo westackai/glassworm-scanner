@@ -30,6 +30,9 @@
 #
 # Options:
 #   --repos-from F       read additional targets (one per line) from file F
+#   --deep               ALSO check dependency manifests (package-lock.json,
+#                        yarn.lock, requirements*.txt) on every scanned branch
+#                        against data/malicious-packages.tsv. Read-only.
 #   --include-archived   include archived repositories (default: skip)
 #   --include-forks      include fork repositories (default: skip)
 #   --dry-run-github     preview direct GitHub cleanup; make no changes
@@ -42,6 +45,7 @@ shopt -s nocasematch
 
 OWNERS=()
 INCLUDE_ARCHIVED=0
+DEEP=0
 INCLUDE_FORKS=0
 MODE="scan"
 
@@ -59,6 +63,9 @@ Targets:
 
 Modes/options:
   --repos-from F       read additional targets (one per line) from file F
+  --deep               also check dependency manifests (package-lock.json,
+                       yarn.lock, requirements*.txt) against the known-malicious
+                       package database
   --include-archived   include archived repositories (default: skip)
   --include-forks      include fork repositories (default: skip)
   --dry-run-github     scan + preview direct GitHub cleanup; make no changes
@@ -84,6 +91,7 @@ while [ "$#" -gt 0 ]; do
         [ -n "$line" ] && OWNERS+=("$line")
       done < "$2"
       shift 2 ;;
+    --deep) DEEP=1; shift ;;
     --include-archived) INCLUDE_ARCHIVED=1; shift ;;
     --include-forks)    INCLUDE_FORKS=1; shift ;;
     --dry-run-github)
@@ -125,6 +133,8 @@ INFECTED_TOTAL=0
 REPOS=0
 BRANCHES=0
 CONFIGS_CHECKED=0
+DEPS_CHECKED=0
+SOURCES_CHECKED=0
 SCAN_INCOMPLETE=0
 CLEANED_TOTAL=0
 FAILED_TOTAL=0
@@ -339,6 +349,113 @@ file_clean_for_kind() {
   esac
 }
 
+
+# ---------------------------------------------------------------------------
+# --deep : dependency manifests fetched from GitHub and matched against the
+#          known-malicious package database. Read-only; no clone.
+# ---------------------------------------------------------------------------
+HERE_DIR="$(cd "$(dirname "$0")" && pwd)"
+PKG_DB="$HERE_DIR/data/malicious-packages.tsv"
+DEP_PATH_RE='(^|/)(package-lock\.json|yarn\.lock|requirements[^/]*\.txt)$'
+DEP_BLOBS_SEEN="$(mktemp)"
+TMP_ITEMS+=("$DEP_BLOBS_SEEN")
+
+# Emit name<TAB>version from a manifest, format inferred from the filename.
+parse_manifest() { # file path
+  local f="$1" path="$2"
+  case "$path" in
+    *package-lock.json)
+      python3 - "$f" <<'PYX' 2>/dev/null
+import json,sys
+try: d=json.load(open(sys.argv[1]))
+except Exception: sys.exit(0)
+def emit(n,v):
+    if n and v: print(f"{n}\t{v}")
+for k,v in (d.get('packages') or {}).items():
+    if not k: continue
+    emit(v.get('name') or k.split('node_modules/')[-1], v.get('version'))
+def walk(deps):
+    for n,v in (deps or {}).items():
+        if isinstance(v,dict):
+            emit(n, v.get('version')); walk(v.get('dependencies'))
+walk(d.get('dependencies'))
+PYX
+      ;;
+    *yarn.lock)
+      awk '/^"?[^ #].*:$/{name=$0; gsub(/^"/,"",name); sub(/@[^@]*:$/,"",name); next}
+           /^  version /{gsub(/"/,"",$2); if(name!="") print name"\t"$2}' "$f" 2>/dev/null ;;
+    *requirements*.txt)
+      grep -E '^[A-Za-z0-9._-]+[[:space:]]*==[[:space:]]*[0-9]' "$f" 2>/dev/null |
+        sed -E 's/[[:space:]]//g; s/==/\t/; s/[;#].*$//' ;;
+  esac
+}
+
+# Match a manifest's dependencies against PKG_DB (single awk pass, same
+# semantics as scan-local.sh: exact list, inclusive range, or *).
+inspect_manifest() { # repo branch branch_sha path blob_sha file
+  local repo="$1" branch="$2" bsha="$3" path="$4" blob="$5" f="$6"
+  [ -f "$PKG_DB" ] || return 0
+  local deps; deps="$(new_tmp)"
+  parse_manifest "$f" "$path" | sort -u > "$deps"
+  [ -s "$deps" ] || return 0
+  while IFS=$'\t' read -r pname pver pcamp; do
+    [ -n "$pname" ] && report "$repo" "$branch" "$bsha" "$path" "$blob" "dependency" \
+      "malicious-package:$pname@$pver($pcamp)"
+  done < <(awk -F'\t' '
+    function vnum(v,  a,n,i,r,x) { n=split(v,a,"."); r=0
+      for(i=1;i<=3;i++){ x=(i<=n)?a[i]+0:0; r=r*100000+x } return r }
+    NR==FNR { if ($0 ~ /^#/ || NF<4) next; spec[$1]=$3; camp[$1]=$4; next }
+    {
+      name=$1; ver=$2
+      if (!(name in spec)) next
+      sp=spec[name]
+      if (sp=="*") { print name "\t" ver "\t" camp[name]; next }
+      if (sp ~ /^[0-9][0-9.]*-[0-9]/) {
+        i=index(sp,"-"); lo=substr(sp,1,i-1); hi=substr(sp,i+1)
+        if (vnum(ver)>=vnum(lo) && vnum(ver)<=vnum(hi)) print name "\t" ver "\t" camp[name]
+        next
+      }
+      n=split(sp,vs,",")
+      for(i=1;i<=n;i++){ gsub(/^[ \t]+|[ \t]+$/,"",vs[i]); if (vs[i]==ver) { print name "\t" ver "\t" camp[name]; break } }
+    }' "$PKG_DB" "$deps")
+}
+
+
+# ---------------------------------------------------------------------------
+# --deep content sweep: the path allowlist above only covers files we KNOW the
+# worm targets. It cannot see a payload appended to an arbitrary source file
+# (e.g. scripts/run_all_tests.js). With --deep we additionally fetch source
+# blobs and apply the same marker / padding / invisible-Unicode tests that
+# scan-local.sh uses. Blobs are deduped by SHA, so a file identical across
+# branches costs one fetch, not one per branch.
+# ---------------------------------------------------------------------------
+SOURCE_SCAN_RE='\.(js|mjs|cjs|jsx|ts|tsx|mts|cts|json|py|sh|bash|bat|cmd|ps1)$'
+SOURCE_SKIP_RE='(^|/)(node_modules|dist|build|out|coverage|vendor|\.next|\.nuxt)/|\.min\.(js|css)$|\.map$|package-lock\.json$|yarn\.lock$'
+SOURCE_MAX_BYTES=2000000
+PAD_MIN_GH=200
+CONTENT_BLOBS_SEEN="$(mktemp)"
+TMP_ITEMS+=("$CONTENT_BLOBS_SEEN")
+
+# Print reasons if a fetched source blob looks like it carries a payload.
+content_sweep_reasons() { # file
+  local f="$1" r="" wsrun maxlen
+  grep -qF 'lzcdrtfxyqiplpd' "$f" 2>/dev/null && r="forcememo-marker"
+  grep -qF 'rmcej%otb%' "$f" 2>/dev/null && r="${r:+$r,}polinrider-marker"
+  grep -qF 'Cot%3t=shtP' "$f" 2>/dev/null && r="${r:+$r,}polinrider-marker2"
+  grep -qF 'String.fromCharCode(127)' "$f" 2>/dev/null && r="${r:+$r,}fromCharCode-127-decoder"
+  wsrun="$(grep -oE "[[:blank:]]{$PAD_MIN_GH,}" "$f" 2>/dev/null | head -1 | wc -c | tr -d ' ')"
+  [ "${wsrun:-0}" -gt "$PAD_MIN_GH" ] && r="${r:+$r,}code-hidden-after-${PAD_MIN_GH}+-spaces"
+  # invisible-Unicode payload: a RUN of variation selectors (perl; BSD grep cannot)
+  if command -v perl >/dev/null 2>&1; then
+    perl -e 'open(my $h,"<:raw",$ARGV[0]) or exit 1; local $/; my $s=<$h>;
+             exit(($s =~ /(?:\xEF\xB8[\x80-\x8F]|\xF3\xA0[\x84-\x87][\x80-\xBF]){8,}/) ? 0 : 1);' "$f" 2>/dev/null \
+      && r="${r:+$r,}invisible-unicode-payload"
+  fi
+  maxlen="$(awk '{ if (length($0)>m) m=length($0) } END { print m+0 }' "$f" 2>/dev/null)"
+  [ -n "$r" ] && [ "${maxlen:-0}" -gt 2000 ] && r="$r,very-long-line($maxlen)"
+  printf '%s' "$r"
+}
+
 # Scan one branch using GitHub's recursive Git tree API.
 scan_branch() {
   local repo="$1" branch="$2" commit_sha="$3" tree_sha tree_data truncated path blob_sha f inspected kind reason
@@ -354,7 +471,7 @@ scan_branch() {
   tree_data="$(new_tmp)"
   # First row is metadata; remaining rows are PATH<TAB>BLOB_SHA.
   if ! gh api -X GET "repos/$repo/git/trees/$tree_sha" -f recursive=1 \
-        --jq '["__TRUNCATED__", (.truncated|tostring)], (.tree[] | select(.type == "blob") | [.path,.sha]) | @tsv' \
+        --jq '["__TRUNCATED__", (.truncated|tostring), "0"], (.tree[] | select(.type == "blob") | [.path,.sha,(.size|tostring)]) | @tsv' \
         > "$tree_data" 2>/dev/null; then
     printf "    ${YEL}WARN${RST} %s@%s: tree API failed\n" "$repo" "$branch"
     echo "$repo@$branch (tree API failed)" >> "$ERR_LIST"
@@ -369,9 +486,41 @@ scan_branch() {
     SCAN_INCOMPLETE=1
   fi
 
-  while IFS=$'\t' read -r path blob_sha; do
+  while IFS=$'\t' read -r path blob_sha blob_size; do
     [ "$path" = "__TRUNCATED__" ] && continue
     [ -n "$path" ] && [ -n "$blob_sha" ] || continue
+
+    # --deep: dependency manifests. Deduped by blob SHA so an identical
+    # lockfile shared by many branches is fetched once, not once per branch.
+    if [ "$DEEP" = 1 ] && [[ "$path" =~ $DEP_PATH_RE ]]; then
+      if ! grep -qxF "$blob_sha" "$DEP_BLOBS_SEEN" 2>/dev/null; then
+        echo "$blob_sha" >> "$DEP_BLOBS_SEEN"
+        f="$(new_tmp)"
+        if fetch_blob_sha "$repo" "$blob_sha" "$f"; then
+          DEPS_CHECKED=$((DEPS_CHECKED+1))
+          inspect_manifest "$repo" "$branch" "$commit_sha" "$path" "$blob_sha" "$f"
+        else
+          echo "$repo@$branch:$path (manifest fetch failed)" >> "$ERR_LIST"
+          SCAN_INCOMPLETE=1
+        fi
+        rm -f "$f"
+      fi
+    fi
+
+    # --deep: content sweep over ordinary source files (deduped by blob SHA)
+    if [ "$DEEP" = 1 ] && [[ "$path" =~ $SOURCE_SCAN_RE ]] && ! [[ "$path" =~ $SOURCE_SKIP_RE ]] \
+       && [ "${blob_size:-0}" -le "$SOURCE_MAX_BYTES" ]; then
+      if ! grep -qxF "$blob_sha" "$CONTENT_BLOBS_SEEN" 2>/dev/null; then
+        echo "$blob_sha" >> "$CONTENT_BLOBS_SEEN"
+        f="$(new_tmp)"
+        if fetch_blob_sha "$repo" "$blob_sha" "$f"; then
+          SOURCES_CHECKED=$((SOURCES_CHECKED+1))
+          creason="$(content_sweep_reasons "$f")"
+          [ -n "$creason" ] && report "$repo" "$branch" "$commit_sha" "$path" "$blob_sha" "content" "$creason"
+        fi
+        rm -f "$f"
+      fi
+    fi
 
     # Only fetch candidate blobs; all other files remain server-side.
     if [[ "$path" =~ $ARTIFACT_PATH_RE || "$path" =~ $TASKS_TARGET_RE || "$path" =~ $FONT_TARGET_RE \
@@ -566,6 +715,16 @@ remediate_finding() {
       fi
       ;;
 
+    content)
+      echo "      ${YEL}MANUAL${RST} payload appended to a source file — inspect and strip by hand"
+      MANUAL_TOTAL=$((MANUAL_TOTAL+1))
+      ;;
+
+    dependency)
+      echo "      ${YEL}MANUAL${RST} malicious dependency — bump/remove the package in this repo"
+      MANUAL_TOTAL=$((MANUAL_TOTAL+1))
+      ;;
+
     config|tasks|extjson|settings)
       echo "      ${YEL}MANUAL REVIEW${RST} no verified clean historical version; GitHub left unchanged"
       MANUAL_TOTAL=$((MANUAL_TOTAL+1))
@@ -587,7 +746,7 @@ fi
 
 echo "${BLD}GlassWorm GitHub API sweep${RST}"
 echo "Targets: ${OWNERS[*]}"
-echo "Mode: $MODE"
+echo "Mode: $MODE$([ "$DEEP" = 1 ] && echo " + deep (dependency manifests)")"
 echo "Repository clones: none"
 echo "Started: $(date)   (archived=$([ "$INCLUDE_ARCHIVED" = 1 ] && echo yes || echo no), forks=$([ "$INCLUDE_FORKS" = 1 ] && echo yes || echo no))"
 echo
@@ -642,7 +801,7 @@ for owner in "${OWNERS[@]}"; do
 done
 
 echo "${BLD}=== Scan Summary ===${RST}"
-echo "Targets: ${#OWNERS[@]}   Repos scanned: $REPOS   Branches scanned: $BRANCHES   Target configs inspected: $CONFIGS_CHECKED"
+echo "Targets: ${#OWNERS[@]}   Repos scanned: $REPOS   Branches scanned: $BRANCHES   Target configs inspected: $CONFIGS_CHECKED$([ "$DEEP" = 1 ] && echo "   Dependency manifests: $DEPS_CHECKED   Source blobs: $SOURCES_CHECKED")"
 if [ -s "$ERR_LIST" ]; then
   echo "${YEL}Incomplete/error items:${RST}"
   sort -u "$ERR_LIST" | sed 's/^/  /'
