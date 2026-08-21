@@ -1,18 +1,18 @@
 <div align="center">
 
-<img src="images/icon.png" alt="GlassWorm Scanner Logo" width="220" />
+<img src="images/icon.png" alt="GlassWorm Scanner Logo" width="200" />
 
 # GlassWorm Scanner
 
-**A high-precision, multi-layered security scanner and remediation toolkit for the GlassWorm supply-chain malware campaign.**
+**A high-precision security suite and automated remediation toolkit for the GlassWorm developer supply-chain malware campaign.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Bash](https://img.shields.io/badge/Language-Bash%20%2F%20Perl-4EAA25.svg)](https://www.gnu.org/software/bash/)
+[![Language](https://img.shields.io/badge/Language-Bash%20%7C%20Python%20%7C%20Perl-4EAA25.svg)]()
 [![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-lightgrey.svg)]()
-[![Detection: Multi-Wave](https://img.shields.io/badge/Threat%20Intel-Waves%201--6%20%2B%20Sleeper-red.svg)]()
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Threat Intel](https://img.shields.io/badge/Threat%20Intel-Extensions%20%2B%20Packages%20%2B%20Secrets-red.svg)]()
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/westackai/glassworm-scanner/pulls)
 
-[Overview](#overview) • [The Threat](#what-is-glassworm--what-are-we-solving) • [Architecture](#architecture) • [Comparison Matrix](#comparison-matrix) • [Installation](#installation--prerequisites) • [Usage Guide](#usage-guide) • [Incident Response](#incident-response-playbook) • [Contributing](#contributing) • [License](#license)
+[Overview](#overview) • [Installation](#installation--prerequisites) • [Tools & Usage](#tools--usage) • [Threat Intel & IoCs](#threat-intelligence--iocs) • [Incident Response](#incident-response) • [CI/CD](#cicd-pipeline-integration) • [Contributing](#contributing) • [References](#threat-intelligence-references--acknowledgments) • [License](#license)
 
 ---
 
@@ -20,218 +20,93 @@
 
 ## Overview
 
-**GlassWorm Scanner** is a specialized defense toolkit engineered to detect, audit, and remediate the elusive **GlassWorm** developer supply-chain malware.
+**GlassWorm** is a sophisticated developer supply-chain malware campaign that propagates primarily through compromised Visual Studio Code and OpenVSX extensions. It infects repositories and developer workstations using:
+- **Invisible Unicode variation selectors** (`U+FE00`–`U+FE0F`, `U+E0100`–`U+E01EF`) and **200+ space off-screen padding** in JS/TS configs.
+- **Masqueraded font files** (e.g. `public/fonts/fa-solid-400.woff2` containing obfuscated Node.js scripts).
+- **Automated IDE execution** via `.vscode/tasks.json` (`folderOpen`) and `.vscode/settings.json` prompt bypasses.
+- **Blockchain dead-drop C2 resolvers** (Ethereum / Solana transaction metadata) and Git commit author spoofing.
+- **Secondary malware loaders** distributed through poisoned npm and PyPI packages.
 
-GlassWorm propagates through compromised Visual Studio Code and OpenVSX extensions, infecting developer workstations, code repositories, and IDE configuration files. It uses advanced evasion techniques—including **invisible Unicode variation selectors**, **extreme whitespace padding**, **masqueraded font binaries**, and **IDE task hijacking**—to execute arbitrary code and silently spread across Git branches.
+This toolkit provides **five focused, zero-trust tools** to detect, audit, and clean infections across your workstations, repositories, and GitHub organizations:
 
-This repository provides three complementary, zero-trust tools tailored for developers, DevOps, and AppSec teams:
-
-1. **`check-extensions.sh`** — Audits installed extensions across 7+ IDEs against 325+ known-compromised extension IDs, with deep bytecode/regex heuristics for unlisted waves.
-2. **`scan-local.sh`** — 100% offline, read-only scanner for local Git clones, branch tips, commit history, and working trees.
-3. **`scan-github.sh`** — Cloud-native, zero-clone scanner and automated remediator that audits GitHub organizations and branches via the GitHub API.
-
----
-
-## What is GlassWorm & What Are We Solving?
-
-The GlassWorm malware campaign represents a sophisticated evolution in developer-targeted software supply chain attacks. Unlike traditional malware that triggers loud alerts, GlassWorm utilizes steganographic and IDE-native persistence mechanisms:
-
-```
-┌─────────────────────────────────────────────────────────────────────────────────────────┐
-│                              GLASSWORM ATTACK LIFECYCLE                                 │
-└─────────────────────────────────────────────────────────────────────────────────────────┘
-   1. INFECTION              2. PERSISTENCE                3. EXECUTION            4. PROPAGATION
- Compromised Extension  ──► .vscode/tasks.json       ──► Node.js executes  ──►  Steals Git Tokens &
- (VS Code / Cursor /        (folderOpen auto-exec)       fake font payload      Commits spoofed code
- Windsurf / VSCodium)   ──► .vscode/settings.json        (fa-solid-400.woff2)   across all branches
-                            (task auto-allow bypass) ──► Hidden payload in
-                        ──► Invisible Unicode in         postcss/next.config
-                            JS/TS config files
-```
-
-### The Evasion Techniques We Defeat
-
-| Attack Vector | Malware Technique | Why Standard Scanners Fail | How GlassWorm Scanner Solves It |
-| :--- | :--- | :--- | :--- |
-| **Invisible Unicode Payloads** | Encodes executable bytes into runs of Unicode Variation Selectors (`U+FE00`–`U+FE0F`, `U+E0100`–`U+E01EF`). | Text renders normally on-screen; standard diffs and grep tools fail to flag them. macOS BSD grep silently skips high-byte brackets. | Uses a custom byte-level Perl engine (`VS_RUN_MIN=8`) to detect variation selector sequences without false positives on emoji/BOMs. |
-| **Off-Screen Whitespace Padding** | Injects payloads after 200+ spaces/tabs on a single line at the bottom of configs (`next.config.js`, `postcss.config.mjs`). | Editors truncate or wrap the screen; human review and naive linters miss code pushed off-screen. | Runs regex sweeps (`PAD_MIN=200`) across all tracked Git blobs and disk files, filtering out minified bundle false positives. |
-| **Fake Font Execution** | Drops malicious JS disguised as font files (e.g. `public/fonts/fa-solid-400.woff2`). | Asset directories are frequently excluded from source code security reviews. | Verifies MIME type and magic bytes (`file -b`), detecting ASCII/script payloads disguised as `.woff2`, `.ttf`, or `.eot`. |
-| **Silent IDE Task Hijack** | Registers `folderOpen` tasks in `.vscode/tasks.json` and auto-enables them via `.vscode/settings.json`. | Developers automatically run malware simply by opening the repository in VS Code or Cursor. | Audits `.vscode` configurations for unauthorized `folderOpen` tasks and `allowAutomaticTasks` prompt suppressors. |
-| **History & Branch Poisoning** | Injects helper scripts (`temp_auto_push.bat`, `branch_structure.json`) and force-pushes with spoofed commit authors. | Scanners only checking the default branch (`main`) miss malware residing on stale or feature branches. | Traverses all Git ref namespaces (`refs/heads`, `refs/tags`, `refs/remotes`) and scans commit trees recursively. |
-
----
-
-## Architecture
-
-The toolkit operates across three concentric security perimeters: **Workstation / IDEs**, **Local File System / Git Clones**, and **Remote GitHub Organizations**.
-
-<div align="center">
-
-<img src="images/glassworm_scanner_labeled_overview.png" alt="GlassWorm Scanner Architecture Overview" width="850" />
-
-</div>
-
-### Detection Pipeline
-
-```mermaid
-graph TD
-    A[GlassWorm Detection Engine] --> B[check-extensions.sh]
-    A --> C[scan-local.sh]
-    A --> D[scan-github.sh]
-
-    subgraph "Perimeter 1: Developer IDEs"
-        B --> B1[Walks ~/.vscode, ~/.cursor, ~/.windsurf, etc.]
-        B1 --> B2[Cross-reference compromised-extensions.tsv]
-        B1 --> B3[--deep: Scan JS for decoder patterns & markers]
-        B3 --> B4[Outputs targeted 'code --uninstall-extension' commands]
-    end
-
-    subgraph "Perimeter 2: Local Repositories"
-        C --> C1[100% Offline Git Engine]
-        C1 --> C2[Git History Sweep for artifact paths]
-        C1 --> C3[Git Blob Inspection for Unicode & 200+ space runs]
-        C1 --> C4[Working Tree & Untracked File Scan]
-        C4 --> C5[Exit Code 1 for CI/CD Pipeline gating]
-    end
-
-    subgraph "Perimeter 3: GitHub Organizations"
-        D --> D1[GitHub REST API via gh CLI]
-        D1 --> D2[Zero-clone recursive Git Tree analysis]
-        D1 --> D3[Multi-Branch Candidate Blob Fetch]
-        D3 --> D4[Automated Remediation / Historical Clean Restore]
-    end
-```
-
----
-
-## Comparison Matrix
-
-<div align="center">
-
-<img src="images/glassworm_scanner_full_comparison.png" alt="GlassWorm Scanner Full Comparison Matrix" width="900" />
-
-</div>
-
-| Feature / Capability | `check-extensions.sh` | `scan-local.sh` | `scan-github.sh` |
-| :--- | :---: | :---: | :---: |
-| **Target Perimeter** | Installed IDE Extensions | Local Git Clones & Working Trees | Remote GitHub Repositories |
-| **Network Requirement** | Purely Offline | 100% Offline (Network disabled) | GitHub API (`gh` authenticated) |
-| **Local Disk Modification** | ❌ None (Read-only) | ❌ None (Read-only, no locks) | ❌ None (Zero-clone) |
-| **Remote Modification** | ❌ None | ❌ None | ✅ Optional (`--clean-github`) |
-| **Target Editors / Platforms** | VS Code, Insiders, Cursor, Windsurf, VSCodium, OpenVSX | Any local repository | All GitHub public / private repositories |
-| **Signature Matching** | 325+ Extension IDs (Waves 1–6) | Known helper filenames & hashes | Artifact path regexes |
-| **Heuristic / Code Analysis** | Unicode variation run + `codePointAt` | Whitespace padding (`>200`), PolinRider markers | Exec/eval heuristics, fake fonts, task triggers |
-| **History Analysis** | N/A | Full Git history reachable from refs | Commit history back-tracing per branch |
-| **Remediation Action** | Prints uninstall commands | Flags infected paths & exits 1 | Automated restoration / safe deletion |
+| Tool | Purpose | Primary Scope |
+| :--- | :--- | :--- |
+| **[`check-extensions.sh`](#1-check-extensionssh--ide-extension-audit)** | Audits installed IDE extensions against 418+ malicious IDs + deep invisible Unicode heuristics. | VS Code, Cursor, Windsurf, VSCodium |
+| **[`scan-local.sh`](#2-scan-localsh--local-git--filesystem-scanner)** | 100% offline scanner for local clones, branch tips, commit history, and package dependencies. | Local Git repos & directories |
+| **[`scan-github.sh`](#3-scan-githubsh--remote-github-scanner--remediator)** | Zero-clone GitHub API scanner with automated clean history restoration & helper deletion. | GitHub organizations & repositories |
+| **[`scan-credentials.sh`](#4-scan-credentialssh--secret--token-scanner)** | Redacted secret scanner for Git history diffs, disk, and GitHub organization secret-scanning alerts. | Git history diffs, disk, GitHub alerts |
+| **[`audit-github-access.sh`](#5-audit-github-accesssh--github-access--posture-audit)** | Read-only audit of GitHub authentication, SSH/GPG keys, local credential file permissions, and extension capabilities. | GitHub account, orgs & local workstation |
 
 ---
 
 ## Installation & Prerequisites
 
 ### Prerequisites
-
-- **Operating System:** macOS or Linux (Ubuntu, Debian, Fedora, Arch, etc.)
-- **Shell:** `bash` (v4.0+ recommended)
-- **Utilities:** `perl` (5.10+), `file`, `base64`, `awk`, `sed`, `grep`, `git`
-- **For GitHub Scanning (`scan-github.sh`):** [GitHub CLI (`gh`)](https://cli.github.com/) authenticated (`gh auth login`).
+- **Operating System:** macOS or Linux (Ubuntu, Debian, Fedora, RHEL, Arch, Alpine, etc.)
+- **Shell & Utilities:** `bash` (3.2+ or 4.0+), `python3` (3.8+), `perl` (5.10+), `git` (2.20+), `file`, `base64`, `awk`, `sed`, `grep`, `shasum`
+- **For GitHub API Tools (`scan-github.sh`, `audit-github-access.sh`, `scan-credentials.sh --org`):**
+  - [GitHub CLI (`gh`)](https://cli.github.com/) installed and authenticated (`gh auth login`).
 
 ### Quick Start
 
 ```bash
 # Clone the repository
-git clone https://github.com/ankush-westack/glassworm-scanner.git
+git clone https://github.com/westackai/glassworm-scanner.git
 cd glassworm-scanner
 
-# Make scripts executable
-chmod +x check-extensions.sh scan-local.sh scan-github.sh
+# Make all audit scripts executable
+chmod +x *.sh
 ```
 
 ---
 
-## Usage Guide
+## Tools & Usage
 
-### 1. Auditing Installed Editor Extensions (`check-extensions.sh`)
+### 1. `check-extensions.sh` — IDE Extension Audit
 
-Audits all extensions installed in your development environment against the curated threat intelligence database (`data/compromised-extensions.tsv`).
+Audits all extensions installed in your development environment against the canonical blocklist ([`data/compromised-extensions.tsv`](data/compromised-extensions.tsv)) across VS Code, Cursor, Windsurf, VSCodium, and OpenVSX.
 
 ```bash
-# Fast mode: Check installed extension IDs against known-compromised database
+# Standard mode: Match installed extension IDs against known-compromised database
 ./check-extensions.sh
 
-# Deep mode: Additionally inspect extension JavaScript bundles for invisible Unicode and decoders
+# Deep mode: Also scan extension JavaScript bundles for invisible Unicode runs, markers, and decoders
 ./check-extensions.sh --deep
 ```
 
-#### Supported Editor Directories:
-- `~/.vscode/extensions` (VS Code)
-- `~/.vscode-insiders/extensions` (VS Code Insiders)
-- `~/.vscode-oss/extensions` (Open Source VS Code builds)
-- `~/.cursor/extensions` (Cursor AI IDE)
-- `~/.windsurf/extensions` (Windsurf IDE)
-- `~/.vscodium/extensions` (VSCodium)
-- `~/.openvsx/extensions` (OpenVSX Clients)
-
-#### Example Output:
-```text
-GlassWorm extension audit
-Known-bad list: 329 extension IDs
-
-~/.cursor/extensions (42 installed)
-  COMPROMISED myml.vscode-markdown-plantuml-preview-1.5.0  [wave-3 · Koi Security]
-              uninstall: code --uninstall-extension myml.vscode-markdown-plantuml-preview
-
-=== Summary ===
-Extensions inspected: 42   Known-bad matches: 1   Payload-pattern hits: 0
-Remove the extensions above, then rotate every credential on this machine.
-```
+* **Target Directories:** `~/.vscode/extensions`, `~/.vscode-insiders/extensions`, `~/.vscode-oss/extensions`, `~/.cursor/extensions`, `~/.windsurf/extensions`, `~/.vscodium/extensions`, `~/.openvsx/extensions`.
+* **Output:** Prints exact `code --uninstall-extension <id>` commands for flagged extensions. Exits `0` if clean, `1` on match.
 
 ---
 
-### 2. Scanning Local Git Clones (`scan-local.sh`)
+### 2. `scan-local.sh` — Local Git & Filesystem Scanner
 
-Scans local Git repositories, bare mirrors, and loose directories for worm footprints. Guarantees 100% offline execution by disabling Git network transports, credentials, and index locks.
+Scans local Git repositories, branch tips, commit history, and loose folders. **100% offline** (never touches the network, never locks indices).
 
 ```bash
-# Scan default search paths (~/Projects and ~/github)
+# Scan default search directories (~/Projects and ~/github)
 ./scan-local.sh
 
 # Scan specific directories or repositories
-./scan-local.sh ~/workspace /var/www /opt/code
+./scan-local.sh ~/workspace /var/www
 
-# Output structured TSV report for ingestion into SIEM / SecOps
-./scan-local.sh --tsv /tmp/glassworm_findings.tsv ~/Projects
+# Deep mode: Also scan package manifests & .venv against 462+ malicious packages
+./scan-local.sh --deep ~/Projects
 
 # Include cached remote-tracking branches (refs/remotes/*)
 ./scan-local.sh --include-remote-refs ~/Projects
+
+# Export findings to a tab-separated TSV report
+./scan-local.sh --tsv /tmp/glassworm_findings.tsv ~/Projects
 ```
 
-#### Exit Codes (CI/CD Ready):
-- `0` — Clean: No GlassWorm indicators detected.
-- `1` — Infected: One or more indicators detected.
-- `2` — Syntax or argument error.
-
-#### Example Output:
-```text
-GlassWorm local scan
-Roots: /Users/developer/Projects
-Started: Wed Aug 19 13:15:00 2026
-
-[1] ~/Projects/frontend-app
-  FOUND    tip:refs/heads/feature-login  public/fonts/fa-solid-400.woff2  [fake-font-is-text,known-payload-name]
-  FOUND    tip:refs/heads/feature-login  .vscode/tasks.json               [tasks.json-folderOpen-font-exec]
-  FOUND    content                       postcss.config.mjs               [code-hidden-after-200+-spaces]
-
-=== Summary ===
-Repos scanned: 18   Non-repo folders scanned: 0   Findings: 3
-Repos with findings (1):
-  ~/Projects/frontend-app
-```
+* **Detections:** Fake ASCII fonts (`fa-solid-400.woff2`), `folderOpen` task execution in `.vscode/tasks.json`, `.vscode/settings.json` prompt bypasses, poisoned `.gitignore`, invisible Unicode payloads (`VS_RUN_MIN=8`), off-screen whitespace padding (`PAD_MIN=200`), PolinRider markers (`rmcej%otb%`), and `config.bat` author-spoofing scripts.
 
 ---
 
-### 3. Scanning & Remediating Remote GitHub Repositories (`scan-github.sh`)
+### 3. `scan-github.sh` — Remote GitHub Scanner & Remediator
 
-Performs zero-clone inspection of GitHub repositories and entire organizations using `gh api`. It checks all active branches, identifies the newest uncompromised historical commit for each infected file, and can automatically remediate the repository directly on GitHub.
+Zero-clone GitHub scanner using `gh api`. Scans all branches, finds the newest clean historical version for each infected file, and can automatically remediate the repository directly on GitHub.
 
 ```bash
 # Scan all repositories under an organization
@@ -240,111 +115,112 @@ Performs zero-clone inspection of GitHub repositories and entire organizations u
 # Scan a single repository
 ./scan-github.sh my-org/frontend-app
 
-# Scan multiple organizations or target lists
-./scan-github.sh org-one org-two user/repo --repos-from targets.txt
+# Deep mode: Audit remote lockfiles for malicious npm/PyPI packages
+./scan-github.sh my-org --deep
 
-# Include archived repositories and forks
-./scan-github.sh my-org --include-archived --include-forks
+# Scan targets from a text file (one repo/org per line)
+./scan-github.sh --repos-from targets.txt
 
-# Preview automated GitHub remediation without making any changes
+# Preview automated remediation plan without making any changes
 ./scan-github.sh my-org/frontend-app --dry-run-github
 
 # Execute safe automated remediation directly via GitHub API
 ./scan-github.sh my-org/frontend-app --clean-github
 ```
 
-#### Safe Remediation Rules:
-- **Configurations (`next.config.js`, `postcss.config.mjs`, `tasks.json`):** Restores the file from the latest verified clean historical commit on that branch. If no clean history exists, leaves it untouched and flags for manual review.
-- **Known Helper Artifacts (`temp_auto_push.bat`, `branch_structure.json`):** Deletes directly via API commit.
-- **Fake Text Fonts (`fa-solid-400.woff2`):** Restores clean binary font from history, or deletes text-based payload fonts.
-- **Poisoned `.gitignore`:** Strips malware helper patterns while preserving user rules.
-
-#### Example Output:
-```text
-[1/5] my-org/frontend-app
-  Branch: feature-auth (3 candidate blobs checked)
-    INFECTED  my-org/frontend-app@feature-auth  public/fonts/fa-solid-400.woff2  [text-not-binary,known-payload-name]
-    INFECTED  my-org/frontend-app@feature-auth  .vscode/tasks.json               [tasks.json:folderOpen+font-exec]
-
---- Remediation (Mode: clean-github) ---
-  my-org/frontend-app@feature-auth  .vscode/tasks.json
-      detected: tasks.json:folderOpen+font-exec
-      clean history: e8b9f1a2c3d4
-      CLEANED GitHub commit a1b2c3d4e5f6
-      VERIFIED current GitHub file passes scanner
-  my-org/frontend-app@feature-auth  public/fonts/fa-solid-400.woff2
-      detected: text-not-binary,known-payload-name
-      DELETED + VERIFIED GitHub commit f6e5d4c3b2a1
-
-=== GitHub Scan & Remediation Summary ===
-Repositories Audited: 5   Branches Inspected: 24   Total Findings: 2
-Files Successfully Remediated: 2   Manual Review Required: 0   Failures: 0
-```
+* **Safe Remediation Rules:**
+  - Configs (`next.config.js`, `postcss.config.mjs`, `tasks.json`): Restores only from verified clean historical commits.
+  - Known malware helpers (`temp_auto_push.bat`, `branch_structure.json`): Deletes directly via API commit.
+  - Fake text fonts: Restores verified clean binary font from history, or deletes text payload font.
+  - Poisoned `.gitignore`: Strips malware helper patterns while preserving user rules.
 
 ---
 
-## Detection Signatures & Threat Intelligence
+### 4. `scan-credentials.sh` — Secret & Token Scanner
 
-The repository includes a continuously updated threat intelligence feed at [`data/compromised-extensions.tsv`](data/compromised-extensions.tsv).
+Dedicated, privacy-preserving scanner for exposed tokens in local Git history, uncommitted files, and open GitHub organization alerts.
 
-### Indicators of Compromise (IoCs)
+> [!IMPORTANT]
+> **Privacy Guarantee:** Secrets are **never printed in plaintext** or written to disk unredacted. Matches are masked (`ghp_123456…7890`) and fingerprinted with SHA-256 (`sha256:abcd1234ef56`). Repetitive padding strings are filtered via Shannon entropy checks.
 
-```text
-├── Markers & Obfuscator Signatures
-│   ├── lzcdrtfxyqiplpd             (ForceMemo wave marker)
-│   ├── rmcej%otb%                  (PolinRider obfuscator fingerprint)
-│   ├── Cot%3t=shtP                 (PolinRider obfuscator fingerprint)
-│   └── String.fromCharCode(127)    (Loader delimiter pattern)
-│
-├── Known Malware Helper Files
-│   ├── temp_auto_push.bat          (Automated Git committer & force-pusher)
-│   ├── temp_interactive_push.bat   (Interactive Git push script)
-│   ├── branch_structure.json       (Branch tree metadata tracker)
-│   ├── config.bat                  (Author spoofing and time-manipulation tool)
-│   └── .vscode/spellright.dict     (Disguised payload stage)
-│
-├── Fake Asset Names
-│   └── fa-solid-400.woff2          (Disguised ASCII payload in public/fonts/)
-│
-└── IDE Hijack Patterns
-    ├── "runOn": "folderOpen"       (.vscode/tasks.json automatic execution)
-    └── "task.allowAutomaticTasks"  (.vscode/settings.json prompt suppressor)
+```bash
+# Scan committed files across branch tips in default paths (~/Projects ~/github)
+./scan-credentials.sh
+
+# Deep historical scan: inspect all reachable commit diffs (catches committed & deleted secrets)
+./scan-credentials.sh --history ~/Projects
+
+# Also scan untracked / gitignored local files (.env, .npmrc)
+./scan-credentials.sh --local ~/Projects
+
+# Query open GitHub organization Secret Protection alerts (secrets hidden by GitHub)
+./scan-credentials.sh --org my-org --org partner-org
+
+# Export a secure, mode-0600 redacted TSV report
+./scan-credentials.sh --history --tsv /tmp/credentials_report.tsv ~/Projects
 ```
+
+* **Patterns Covered:** GitHub Tokens (Classic PAT, Fine-grained PAT, OAuth, User/Refresh, Installation), npm Tokens, AWS Access & Secret Keys, Slack Tokens, Stripe Live Keys, Anthropic API Keys, OpenAI Keys, Private Key PEM blocks, and Git Remote URL credentials.
 
 ---
 
-## Incident Response Playbook
+### 5. `audit-github-access.sh` — GitHub Access & Posture Audit
 
-If GlassWorm Scanner identifies an infection on your machine or repository, follow this immediate containment workflow:
+Read-only audit of your GitHub cloud authentication posture, repository access, and local workstation credential storage security.
 
-> [!CAUTION]
-> GlassWorm is designed to capture authentication tokens, SSH credentials, and environment secrets. Treat any machine with an active infection as fully compromised.
+```bash
+# Standard audit: GitHub account metadata + local credential storage posture
+./audit-github-access.sh
 
+# Deep audit: Include organization SSO authorizations, GitHub Apps, and audit logs
+./audit-github-access.sh --org my-org --audit-log
+
+# Repository audit: Inspect deploy keys, webhooks, and secret metadata
+./audit-github-access.sh --repo my-org/web-app --repo my-org/api-server
+
+# Audit all repositories where you have administrator permissions
+./audit-github-access.sh --all-repos
+
+# Pure offline mode (audits local credential files, Git config, and extension capabilities only)
+./audit-github-access.sh --offline
 ```
-┌────────────────────────────────────────────────────────────────────────────────┐
-│                        INCIDENT RESPONSE WORKFLOW                              │
-├────────────────────────────────────────────────────────────────────────────────┤
-│ 1. ISOLATE        Disconnect machine from corporate network / VPN.             │
-│ 2. PURGE EXTS     Run 'code --uninstall-extension <id>' for flagged extensions.│
-│ 3. DISABLE AUTO   Set "extensions.autoUpdate": false in VS Code settings.      │
-│ 4. REMEDIATE REPO Run './scan-github.sh <repo> --clean-github' or restore      │
-│                   clean commit history.                                        │
-│ 5. ROTATE TOKENS  Immediately invalidate & rotate:                             │
-│                   • GitHub Personal Access Tokens (PATs) & SSH Keys            │
-│                   • NPM, PyPI, and package registry publish tokens             │
-│                   • AWS, GCP, and cloud provider API credentials               │
-│                   • Local .env secrets & development API keys                  │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
+
+* **What it Audits:** `gh` auth status and token scopes, SSH/GPG keys, SSO credential authorizations, GitHub App installations, local credential file permissions (`~/.config/gh/hosts.yml`, `~/.npmrc`, `~/.aws/credentials`, `~/.docker/config.json`, etc.), Git `credential.helper` posture, and extension GitHub-auth capabilities.
+
+---
+
+## Threat Intelligence & IoCs
+
+Threat intelligence feeds in [`data/`](data/) and [`iocs.txt`](iocs.txt) are continuously updated:
+
+- **[`data/compromised-extensions.tsv`](data/compromised-extensions.tsv)**: 418+ malicious VS Code / OpenVSX extension IDs across all GlassWorm waves, sleeper campaigns, and evil-twin packages.
+- **[`data/malicious-packages.tsv`](data/malicious-packages.tsv)**: 462+ malicious npm & PyPI packages (Shai-Hulud, PolinRider, TeamPCP, etc.) with exact and range version matching.
+- **[`data/credential-patterns.tsv`](data/credential-patterns.tsv)**: 16+ high-precision token regexes with false-positive suppression rules.
+- **[`data/credential-ignore.txt`](data/credential-ignore.txt)**: Filter for known benign documentation/placeholder keys.
+- **[`iocs.txt`](iocs.txt)**: Technical indicators including MD5 hashes, C2 IP addresses, Ethereum dead-drop endpoints (`eth.blockscout.com`), attacker wallet fragments (`0xa322E5f3D311D3080e9aDC2490Ef6f0121063e…`), and obfuscator fingerprints (`rmcej%otb%`, `Cot%3t=shtP`, `lzcdrtfxyqiplpd`).
+
+---
+
+## Incident Response
+
+If GlassWorm or exposed credentials are detected:
+
+1. **Isolate Workstation:** Disconnect from corporate Wi-Fi/Ethernet and VPN.
+2. **Purge Extensions:** Run `code --uninstall-extension <id>` for all flagged extensions.
+3. **Disable Auto-Tasks:** In IDE settings, set `"task.allowAutomaticTasks": "off"` and `"extensions.autoUpdate": false`.
+4. **Audit Access & Keys:** Run `./audit-github-access.sh` to review active keys, tokens, and authorizations.
+5. **Scan Credentials:** Run `./scan-credentials.sh --history --local` to locate exposed tokens.
+6. **Remediate Repositories:** Run `./scan-github.sh <org> --clean-github` to clean infected branches on GitHub.
+7. **Revoke & Rotate:** Immediately revoke and rotate all GitHub PATs, SSH keys, npm tokens, cloud API keys, and crypto wallet secrets. *(Deleting a commit does not revoke an exposed token).*
 
 ---
 
 ## CI/CD Pipeline Integration
 
-You can integrate `scan-local.sh` into your GitHub Actions CI workflow to prevent infected pull requests from being merged:
+Integrate automated scanning into your GitHub Actions workflow:
 
 ```yaml
-name: GlassWorm Security Audit
+name: Security & Malware Audit
 
 on:
   push:
@@ -353,138 +229,96 @@ on:
     branches: [ main, master, develop ]
 
 jobs:
-  glassworm-scan:
-    name: Scan for GlassWorm Malware
+  security-audit:
+    name: GlassWorm & Secret Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch full history for deep audit
+          fetch-depth: 0
 
-      - name: Clone GlassWorm Scanner
-        run: git clone https://github.com/ankush-westack/glassworm-scanner.git /tmp/glassworm-scanner
+      - name: Clone Scanner
+        run: git clone https://github.com/westackai/glassworm-scanner.git /tmp/glassworm-scanner
 
-      - name: Run Local Scan
+      - name: Audit Repository for Malware
         run: |
-          chmod +x /tmp/glassworm-scanner/scan-local.sh
-          /tmp/glassworm-scanner/scan-local.sh --include-remote-refs .
+          chmod +x /tmp/glassworm-scanner/*.sh
+          /tmp/glassworm-scanner/scan-local.sh --deep --include-remote-refs .
+
+      - name: Audit Repository for Committed Secrets
+        run: |
+          /tmp/glassworm-scanner/scan-credentials.sh --history .
 ```
 
 ---
 
 ## Contributing
 
-We welcome and appreciate contributions from the security, DevOps, and open-source communities! Whether you want to **add a new feature**, **extend detection heuristics**, **support new editors/platforms**, or **update threat intelligence**, here is how you can get involved.
-
----
+We welcome contributions from the cybersecurity, DevOps, and open-source communities!
 
 ### 🌟 Ways to Contribute
 
-You can help make GlassWorm Scanner more powerful by proposing features and submitting Pull Requests for:
-
-* **🚀 New Features & Capabilities:**
-  * Support for additional Git hosting providers (e.g., **GitLab API**, **Bitbucket Cloud / Server**, **Gitea / Forgejo**).
-  * New output formats (e.g., **SARIF** for GitHub Security tab integration, structured **JSON**, **HTML audit reports**).
-  * **Pre-commit git hooks** and **standalone Docker image** packaging.
-  * Auto-remediation rollback / snapshot verification tooling.
 * **🛡️ Threat Intelligence & Signatures:**
-  * Reporting and cataloging newly discovered GlassWorm waves, sleeper extensions, and malicious publishers.
-  * Adding newly observed obfuscator fingerprints or payload delivery patterns.
+  * Submitting newly discovered GlassWorm waves, sleeper extensions, and malicious publishers to [`data/compromised-extensions.tsv`](data/compromised-extensions.tsv).
+  * Adding newly observed malicious npm/PyPI packages to [`data/malicious-packages.tsv`](data/malicious-packages.tsv).
+  * Refining token detection patterns in [`data/credential-patterns.tsv`](data/credential-patterns.tsv).
+* **🚀 New Tooling & Features:**
+  * Support for additional Git hosting providers (e.g. **GitLab API**, **Bitbucket Cloud / Server**, **Gitea / Forgejo**).
+  * New output formats (**SARIF** for GitHub Code Scanning, structured **JSON**, **HTML audit reports**).
+  * Pre-commit git hooks and standalone Docker container packaging.
 * **💻 Additional IDE & Editor Support:**
-  * Adding extension path detection for emerging editors (e.g., **Zed**, **Trae**, **Positron**, **Eclipse Theia**).
+  * Adding extension path discovery for emerging IDEs (e.g. **Zed**, **Trae**, **Positron**, **Eclipse Theia**).
 * **⚡ Detection Engine & Performance:**
-  * Improving speed and memory efficiency for ultra-large monorepos.
-  * Enhancing heuristics to eliminate false positives while keeping high true-positive sensitivity.
-* **📖 Documentation & CI/CD Examples:**
-  * Adding tutorials, CI/CD pipeline recipes (GitLab CI, Bitbucket Pipelines, Jenkins), and translations.
+  * Optimizing scanning throughput across massive monorepos.
+  * Enhancing heuristic filters to maintain zero false positives.
 
----
-
-### 🔄 Step-by-Step PR Workflow
+### 🔄 PR Workflow
 
 1. **Fork & Branch:**
    ```bash
-   # Fork the repository on GitHub, then clone your fork locally:
    git clone https://github.com/<your-username>/glassworm-scanner.git
    cd glassworm-scanner
-
-   # Create a descriptive feature branch
-   git checkout -b feature/add-sarif-output-support
-   # or
    git checkout -b threat-intel/wave-7-extensions
    ```
 
-2. **Develop & Implement:**
-   * Write clean, self-documenting shell/Perl code.
-   * Maintain the core security guarantees (see [Development Standards](#development--safety-standards) below).
-
-3. **Validate & Test Locally:**
+2. **Validate & Test Locally:**
    ```bash
    # 1. Run shellcheck to catch syntax and portability issues
-   shellcheck check-extensions.sh scan-local.sh scan-github.sh
+   shellcheck *.sh
 
-   # 2. Test against local repositories and check offline safety
-   ./scan-local.sh --include-remote-refs .
+   # 2. Test offline scanners
+   ./scan-local.sh --deep .
    ./check-extensions.sh --deep
+   ./scan-credentials.sh .
    ```
 
-4. **Commit with Clear Messages:**
-   Use clear, conventional commit messages:
-   ```bash
-   git commit -m "feat(reporter): add SARIF JSON export flag to scan-local.sh"
-   ```
-
-5. **Submit a Pull Request (PR):**
-   * Push your branch to your GitHub fork:
-     ```bash
-     git push origin feature/add-sarif-output-support
-     ```
-   * Open a **Pull Request** against `main` on the [glassworm-scanner repository](https://github.com/ankush-westack/glassworm-scanner/pulls).
-   * Fill in the PR description detailing what was added/changed, motivation, and any testing performed.
-
----
-
-### 📋 Specific Contribution Guidelines
-
-#### 1. Adding New Compromised Extension IDs
-To add newly discovered malicious extension IDs:
-1. Open [`data/compromised-extensions.tsv`](data/compromised-extensions.tsv).
-2. Append the verified entry in the TSV format:
-   ```text
-   publisher.extension-name<TAB>wave-identifier<TAB>Source / Security Advisory Reference
-   ```
-3. Include reference links to the security advisory (e.g., Koi Security, Socket.dev, Checkmarx, CVE) in your PR description.
-
-#### 2. Adding Detection Signatures or Heuristics
-When adding new regex patterns or content checks:
-* Verify against benign codebases (e.g., standard minified bundles, font libraries like `pdf.js` / `opentype.js`) to ensure **zero false positives**.
-* Ensure byte-level compatibility across both **GNU/Linux** (`grep`/`perl`) and **macOS BSD** environments.
-
----
+3. **Submit a Pull Request:** Open a PR against `main` on [westackai/glassworm-scanner](https://github.com/westackai/glassworm-scanner/pulls) with clear references to any security research or advisories.
 
 ### 🛡️ Development & Safety Standards
-
-All PRs must adhere to these foundational principles:
 
 | Invariant | Requirement |
 | :--- | :--- |
 | **Zero Network Activity (`scan-local.sh`)** | Must never make network calls, trigger credential prompts, or take repository index locks. |
 | **Safe Remediation (`scan-github.sh`)** | Never delete user configurations without verifying historical clean commits. |
-| **Portability** | Must run on Bash 3.2+ / 4.0+ across both macOS and Linux. Avoid non-standard dependencies. |
+| **Privacy & Redaction (`scan-credentials.sh`)** | Never output plaintext secrets; enforce SHA-256 fingerprinting and mode-0600 report permissions. |
+| **Portability** | Must run on Bash 3.2+ / 4.0+ across both macOS and Linux. |
 | **ShellCheck Compliance** | Must pass `shellcheck` with zero severe warnings. |
 
 ---
 
 ## Threat Intelligence References & Acknowledgments
 
-This toolkit synthesizes research and indicators from:
-- [Koi Security](https://www.koisecurity.com/) (Waves 1–5 analysis, Native binary findings)
-- [Socket.dev](https://socket.dev/) (73-sleeper extension campaign, transitive infection analysis)
-- [Checkmarx Zero](https://checkmarx.com/) (Supply chain threat intelligence)
-- [Truesec Research](https://www.truesec.com/)
-- [Manifold Security](https://manifold.security/) (Evil-twin extensions)
-- [StepSecurity](https://www.stepsecurity.io/), [Aikido Security](https://www.aikido.dev/), [JFrog](https://jfrog.com/)
+This toolkit synthesizes research, indicators, and telemetry from across the cybersecurity industry:
+
+- **[Koi Security](https://www.koisecurity.com/)** — [GlassWorm initial discovery](https://www.koi.ai/blog/glassworm-first-self-propagating-worm-using-invisible-code-hits-openvsx-marketplace), native binary analysis, macOS campaign tracking, and MCP attack wave research.
+- **[Socket.dev](https://socket.dev/)** — [GlassWorm v2 threat feed](https://socket.dev/supply-chain-attacks/glassworm-v2), [73 OpenVSX sleeper extensions research](https://socket.dev/blog/73-open-vsx-sleeper-extensions-glassworm), and transitive campaign analysis.
+- **[Checkmarx Zero](https://checkmarx.com/)** — Supply chain threat intelligence and malicious package disclosures.
+- **[Yeeth Security](https://yeethsecurity.com/)** — [Bane forensics](https://yeethsecurity.com/blog/2026-04-28-GlassWormBaneForensics), [Solana dead-drop research](https://yeethsecurity.com/blog/2026-05-25-Glassworm-Solana), and [WASM delivery wave analysis](https://yeethsecurity.com/blog/2026-06-16-Glassworm-WASM).
+- **[Manifold Security](https://manifold.security/)** — [OpenVSX evil-twin extensions analysis](https://www.manifold.security/blog/open-vsx-evil-twin-extensions).
+- **[StepSecurity](https://www.stepsecurity.io/)** & **[BleepingComputer](https://www.bleepingcomputer.com/)** — Malicious npm release tracking and CI/CD security advisories.
+- **[Aikido Security](https://www.aikido.dev/)** & **[JFrog Security](https://jfrog.com/)** — Unicode variation selector attacks and fake font binary evasion analysis.
+- **[Wiz Research](https://www.wiz.io/)** & **[Sonatype](https://www.sonatype.com/)** — Shai-Hulud malware campaign indicators and dependency-confusion intelligence.
 
 ---
 
